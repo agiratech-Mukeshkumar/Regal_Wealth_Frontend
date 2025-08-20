@@ -1,0 +1,464 @@
+-- =================================================================================
+
+-- Regal Wealth Advisors - Complete & Final MySQL Database Schema
+
+-- Version: 2.0
+
+-- Description: This schema covers all features for Admin, Advisor, and Client
+
+-- flows, including appointments, notifications, and financial plans.
+
+-- =================================================================================
+
+
+
+--
+
+-- Core User & Authentication Tables
+
+--
+
+
+
+-- Table `users`: The master table for all individuals who can log in.
+
+CREATE TABLE `users` (
+
+`id` INT AUTO_INCREMENT PRIMARY KEY,
+
+`email` VARCHAR(255) NOT NULL UNIQUE,
+
+`password_hash` VARCHAR(255) NOT NULL,
+
+`role` ENUM('admin', 'advisor', 'client') NOT NULL,
+
+`first_name` VARCHAR(100) NOT NULL,
+
+`last_name` VARCHAR(100) NOT NULL,
+
+`phone_number` VARCHAR(20),
+
+`profile_picture_url` VARCHAR(512),
+
+`is_active` BOOLEAN DEFAULT TRUE,
+
+`two_factor_secret` VARCHAR(255) NULL,
+
+`is_2fa_enabled` BOOLEAN DEFAULT TRUE,
+
+`created_at` TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
+
+`last_login` TIMESTAMP NULL
+
+)
+
+
+
+-- Table `login_attempts`: Tracks login attempts for security lockout.
+
+CREATE TABLE `login_attempts` (
+
+`id` INT AUTO_INCREMENT PRIMARY KEY,
+
+`user_id` INT,
+
+`ip_address` VARCHAR(45),
+
+`attempted_at` TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
+
+`is_successful` BOOLEAN NOT NULL,
+
+FOREIGN KEY (`user_id`) REFERENCES `users`(`id`) ON DELETE CASCADE
+
+) ENGINE=InnoDB;
+
+
+
+--
+
+-- Advisor & Client Relationship Tables
+
+--
+
+
+
+-- Table `advisor_client_map`: Links advisors to their clients.
+
+CREATE TABLE `advisor_client_map` (
+
+`id` INT AUTO_INCREMENT PRIMARY KEY,
+
+`advisor_user_id` INT NOT NULL,
+
+`client_user_id` INT NOT NULL UNIQUE, -- A client has only one primary advisor
+
+FOREIGN KEY (`advisor_user_id`) REFERENCES `users`(`id`) ON DELETE CASCADE,
+
+FOREIGN KEY (`client_user_id`) REFERENCES `users`(`id`) ON DELETE CASCADE
+
+) ENGINE=InnoDB;
+
+
+
+
+
+-- =================================================================================
+
+-- Client "Fact Finder" & Profile Tables
+
+-- =================================================================================
+
+
+
+-- Table `client_profiles`: Core data from the Fact Finder.
+
+CREATE TABLE `client_profiles` (
+
+`id` INT AUTO_INCREMENT PRIMARY KEY,
+
+`client_user_id` INT NOT NULL UNIQUE,
+
+`date_of_birth` DATE,
+
+`marital_status` ENUM('Single', 'Married', 'Divorced', 'Widowed'),
+
+`preferred_contact_method` VARCHAR(50),
+
+`address_line_1` VARCHAR(255),
+
+`address_line_2` VARCHAR(255),
+
+`city` VARCHAR(100),
+
+`state` VARCHAR(100),
+
+`country` VARCHAR(100),
+
+`zip_code` VARCHAR(20),
+
+`occupation` VARCHAR(100),
+
+`employer_name` VARCHAR(100),
+
+`onboarding_status` ENUM('Pending', 'In-Progress', 'Completed') DEFAULT 'Pending',
+
+`tier` ENUM('Bronze', 'Gold', 'Platinum', 'Inner Circle') NULL,
+
+`updated_at` TIMESTAMP DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP,
+
+FOREIGN KEY (`client_user_id`) REFERENCES `users`(`id`) ON DELETE CASCADE
+
+) 
+
+
+
+-- Table `spouses`: Spouse information, linked to a client profile.
+
+CREATE TABLE `spouses` (
+
+`id` INT AUTO_INCREMENT PRIMARY KEY,
+
+`client_user_id` INT NOT NULL UNIQUE,
+
+`first_name` VARCHAR(100),
+
+`last_name` VARCHAR(100),
+
+`date_of_birth` DATE,
+
+`email` VARCHAR(255),
+
+`phone_number` VARCHAR(20),
+
+`occupation` VARCHAR(100),
+
+`employer_name` VARCHAR(100),
+
+FOREIGN KEY (`client_user_id`) REFERENCES `users`(`id`) ON DELETE CASCADE
+
+) ENGINE=InnoDB;
+
+
+
+-- Table `family_members`: Children and grandchildren.
+
+CREATE TABLE `family_members` (
+
+`id` INT AUTO_INCREMENT PRIMARY KEY,
+
+`client_user_id` INT NOT NULL,
+
+`relationship` ENUM('Child', 'Grandchild') NOT NULL,
+
+`full_name` VARCHAR(200),
+
+`date_of_birth` DATE,
+
+`resident_state` VARCHAR(100),
+
+FOREIGN KEY (`client_user_id`) REFERENCES `users`(`id`) ON DELETE CASCADE
+
+) ENGINE=InnoDB;
+
+
+
+-- Table `client_questionnaire_answers`: Stores client answers to the dynamic investor profile questions.
+
+CREATE TABLE `client_questionnaire_answers` (
+
+`id` INT AUTO_INCREMENT PRIMARY KEY,
+
+`client_user_id` INT NOT NULL,
+
+`form_field_id` INT NOT NULL, -- Links to the question defined by the admin
+
+`answer` TEXT, -- Can store text, JSON for multiple selections, etc.
+
+`updated_at` TIMESTAMP DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP,
+
+FOREIGN KEY (`client_user_id`) REFERENCES `users`(`id`) ON DELETE CASCADE,
+
+FOREIGN KEY (`form_field_id`) REFERENCES `form_fields`(`id`) ON DELETE CASCADE
+
+) ENGINE=InnoDB;
+
+
+
+-- Table `financials_income`, `financials_assets`, `financials_liabilities`: Standardized financial data.
+
+    CREATE TABLE `financials_income` (
+
+    `id` INT AUTO_INCREMENT PRIMARY KEY,
+
+    `client_user_id` INT NOT NULL,
+
+    `source` VARCHAR(255) NOT NULL, -- e.g., 'W-2', 'Pension', 'Social Security'
+
+    `owner` ENUM('Client', 'Spouse') NOT NULL,
+
+    `monthly_amount` DECIMAL(15, 2) NOT NULL,
+
+    FOREIGN KEY (`client_user_id`) REFERENCES `users`(`id`) ON DELETE CASCADE
+
+    ) ENGINE=InnoDB;
+
+
+
+CREATE TABLE `financials_assets` (
+
+`id` INT AUTO_INCREMENT PRIMARY KEY,
+
+`client_user_id` INT NOT NULL,
+
+`asset_type` VARCHAR(100) NOT NULL, -- e.g., 'Banking', 'Investment', 'Real Estate'
+
+`description` VARCHAR(255), -- e.g., 'Chase Checking Account'
+
+`owner` VARCHAR(100),
+
+`balance` DECIMAL(15, 2) NOT NULL,
+
+FOREIGN KEY (`client_user_id`) REFERENCES `users`(`id`) ON DELETE CASCADE
+
+) ENGINE=InnoDB;
+
+
+
+CREATE TABLE `financials_liabilities` (
+
+`id` INT AUTO_INCREMENT PRIMARY KEY,
+
+`client_user_id` INT NOT NULL,
+
+`liability_type` VARCHAR(100) NOT NULL, -- e.g., 'Mortgage', 'Credit Card'
+
+`description` VARCHAR(255),
+
+`balance` DECIMAL(15, 2) NOT NULL,
+
+FOREIGN KEY (`client_user_id`) REFERENCES `users`(`id`) ON DELETE CASCADE
+
+) ENGINE=InnoDB;
+
+
+
+-- Table `documents`: Securely stores references to uploaded client documents.
+
+CREATE TABLE `documents` (
+
+`id` INT AUTO_INCREMENT PRIMARY KEY,
+
+`client_user_id` INT NOT NULL,
+
+`document_name` VARCHAR(255) NOT NULL,
+
+`file_path` VARCHAR(512) NOT NULL, -- Secure path to the stored file (e.g., in S3)
+
+`file_size_kb` INT,
+
+`file_type` VARCHAR(50),
+
+`uploaded_at` TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
+
+FOREIGN KEY (`client_user_id`) REFERENCES `users`(`id`) ON DELETE CASCADE
+
+) ENGINE=InnoDB;
+
+
+
+
+
+-- =================================================================================
+
+-- Admin Configuration & Governance Tables
+
+-- =================================================================================
+
+
+
+-- Table `system_settings`: Key-value store for global platform settings.
+
+CREATE TABLE `system_settings` (
+
+`setting_key` VARCHAR(100) PRIMARY KEY,
+
+`setting_value` TEXT,
+
+`description` TEXT
+
+) ENGINE=InnoDB;
+
+
+
+-- Table `content_governance`: Stores editable HTML content for pages like Privacy Policy.
+
+CREATE TABLE `content_governance` (
+
+`page_slug` VARCHAR(100) PRIMARY KEY, -- e.g., 'privacy-policy', 'cepa-disclosure'
+
+`page_title` VARCHAR(255),
+
+`content_html` LONGTEXT,
+
+`last_updated_by` INT,
+
+`updated_at` TIMESTAMP DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP,
+
+FOREIGN KEY (`last_updated_by`) REFERENCES `users`(`id`) ON DELETE SET NULL
+
+) ENGINE=InnoDB;
+
+
+
+-- Table `form_fields`: Defines the questions and fields for all dynamic forms (Fact Finder).
+
+CREATE TABLE `form_fields` (
+
+`id` INT AUTO_INCREMENT PRIMARY KEY,
+
+`form_name` VARCHAR(100) NOT NULL, -- e.g., 'investor_profile', 'assets'
+
+`field_label` TEXT NOT NULL,
+
+`field_type` ENUM('Text', 'Number', 'Checkbox', 'MultipleChoice', 'Select', 'Date') NOT NULL,
+
+`options_json` JSON, -- Stores choices for selects, checkboxes, etc. e.g., '["Option A", "Option B"]'
+
+`is_required` BOOLEAN DEFAULT FALSE,
+
+`is_active` BOOLEAN DEFAULT TRUE,
+
+`field_order` INT DEFAULT 0
+
+) ENGINE=InnoDB;
+
+
+
+
+
+-- =================================================================================
+
+-- Platform Feature Tables (Appointments, Notifications, Plans)
+
+-- =================================================================================
+
+
+
+-- Table `appointments`: Stores meeting information for the advisor dashboard.
+
+-- NOTE: This table is included for future expansion, but will not be used in the initial MVP.
+
+CREATE TABLE `appointments` (
+
+`id` INT AUTO_INCREMENT PRIMARY KEY,
+
+`advisor_user_id` INT NOT NULL,
+
+`client_user_id` INT NOT NULL,
+
+`title` VARCHAR(255) NOT NULL,
+
+`start_time` DATETIME NOT NULL,
+
+`end_time` DATETIME NOT NULL,
+
+`status` ENUM('Scheduled', 'Completed', 'Cancelled') DEFAULT 'Scheduled',
+
+`notes` TEXT,
+
+FOREIGN KEY (`advisor_user_id`) REFERENCES `users`(`id`) ON DELETE CASCADE,
+
+FOREIGN KEY (`client_user_id`) REFERENCES `users`(`id`) ON DELETE CASCADE
+
+) ENGINE=InnoDB;
+
+
+
+-- Table `notifications`: For in-app notifications for all user types.
+
+CREATE TABLE `notifications` (
+
+`id` INT AUTO_INCREMENT PRIMARY KEY,
+
+`recipient_user_id` INT NOT NULL,
+
+`message` TEXT NOT NULL,
+
+`is_read` BOOLEAN DEFAULT FALSE,
+
+`link_url` VARCHAR(512), -- Optional URL to navigate to on click
+
+`created_at` TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
+
+FOREIGN KEY (`recipient_user_id`) REFERENCES `users`(`id`) ON DELETE CASCADE
+
+) ENGINE=InnoDB;
+
+
+
+-- Table `financial_plans`: Stores the plans created by advisors for clients.
+
+CREATE TABLE `financial_plans` (
+
+`id` INT AUTO_INCREMENT PRIMARY KEY,
+
+`client_user_id` INT NOT NULL,
+
+`advisor_user_id` INT NOT NULL,
+
+`plan_name` VARCHAR(255) NOT NULL,
+
+`plan_data_json` JSON NOT NULL, -- Stores all the inputs and outputs from tools like the tax calculator
+
+`status` ENUM('Draft', 'Presented', 'Active') DEFAULT 'Draft',
+
+`created_at` TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
+
+`updated_at` TIMESTAMP DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP,
+
+FOREIGN KEY (`client_user_id`) REFERENCES `users`(`id`) ON DELETE CASCADE,
+
+FOREIGN KEY (`advisor_user_id`) REFERENCES `users`(`id`) ON DELETE CASCADE
+
+) ENGINE=InnoDB;
+

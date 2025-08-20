@@ -1,0 +1,147 @@
+/* --- Main Page Styles --- */
+.tools-hub-page {
+    padding: 2rem;
+    background-color: #f8f9fc;
+}
+
+.page-main-header {
+    background-color: #f5f3ff; /* Light violet background */
+    border: 1px solid #e0d9ff;
+    border-radius: 1rem;
+    text-align: center;
+    padding: 2rem;
+    margin-bottom: 2.5rem;
+}
+
+.page-main-header h2 {
+    font-size: 1.5rem;
+    font-weight: 600;
+    color: #1e293b;
+    margin: 0;
+}
+
+.page-main-header p {
+    font-size: 1rem;
+    color: #475569;
+    margin-top: 0.5rem;
+    max-width: 600px;
+    margin-left: auto;
+    margin-right: auto;
+}
+
+/* --- Grid for Tool Cards --- */
+.tools-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
+    gap: 1.5rem;
+}
+
+/* --- Individual Tool Card Styles --- */
+.tool-card {
+    text-decoration: none;
+    color: #1e293b;
+    display: flex;
+    flex-direction: column;
+    height: 320px; /* Fixed height for uniform cards */
+    border-radius: 1.25rem;
+    position: relative;
+    overflow: hidden;
+    transition: transform 0.2s ease-out, box-shadow 0.2s ease-out;
+    border: 1px solid transparent;
+}
+
+.tool-card:hover {
+    transform: translateY(-8px);
+    box-shadow: 0 10px 20px -5px rgba(0, 0, 0, 0.1);
+}
+
+/* Card background colors */
+.tool-card.blue { background-color: #dbeafe; border-color: #bfdbfe; }
+.tool-card.grey { background-color: #e5e7eb; border-color: #d1d5db; }
+.tool-card.pink { background-color: #fce7f3; border-color: #fbcfe8; }
+.tool-card.violet {
+    background-color: #ede9fe;
+    border: 2px solid #c4b5fd; /* Special border for this card */
+    transform: rotate(2deg); /* Slight rotation */
+}
+.tool-card.violet:hover {
+    transform: translateY(-8px) rotate(2.5deg); /* Enhance rotation on hover */
+}
+
+
+/* Card Content Layout */
+.card-content {
+    padding: 1.5rem;
+    display: flex;
+    flex-direction: column;
+    justify-content: space-between;
+    height: 100%;
+    z-index: 2; /* Ensures content is above the illustration */
+}
+
+/* Background Illustration */
+.card-illustration {
+    position: absolute;
+    bottom: 20%;
+    right: 0;
+    width: 60%;
+    height: auto;
+    opacity: 0.8;
+    z-index: 1;
+    transition: transform 0.3s ease;
+}
+
+.tool-card:hover .card-illustration {
+    transform: scale(1.05);
+}
+
+/* Typography inside the card */
+.card-title {
+    margin: 0;
+    font-size: 0.875rem;
+    font-weight: 500;
+    color: #475569;
+}
+
+.card-description {
+    font-size: 1.5rem;
+    font-weight: 700;
+    margin: 0;
+    line-height: 1.2;
+    max-width: 80%; /* Prevents text from overlapping the arrow */
+}
+
+.card-footer {
+    display: flex;
+    justify-content: space-between;
+    align-items: flex-end;
+}
+
+.card-value {
+    font-size: 1.5rem;
+    font-weight: 700;
+    margin: 0;
+}
+
+.card-subtext {
+    font-size: 0.75rem;
+    color: #64748b;
+    margin: 0.25rem 0 0 0;
+}
+
+.card-arrow-circle {
+    width: 40px;
+    height: 40px;
+    background-color: rgba(255, 255, 255, 0.5);
+    border-radius: 50%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 1.5rem;
+    color: #1e293b;
+    transition: background-color 0.2s;
+}
+
+.tool-card:hover .card-arrow-circle {
+    background-color: #ffffff;
+}

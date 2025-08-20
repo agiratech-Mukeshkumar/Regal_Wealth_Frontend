@@ -1,0 +1,12 @@
+.modal-overlay { position: fixed; inset: 0; background-color: rgba(0, 0, 0, 0.6); display: flex; align-items: center; justify-content: center; z-index: 100; }
+.confirmation-modal { background-color: white; padding: 2rem; border-radius: 1rem; width: 100%; max-width: 400px; text-align: center; }
+.icon-container { width: 50px; height: 50px; border-radius: 50%; display: flex; align-items: center; justify-content: center; margin: 0 auto 1rem auto; font-size: 1.5rem; font-weight: bold; }
+.icon-container.variant-delete, .icon-container.variant-inactive { background-color: #fee2e2; color: #ef4444; }
+.icon-container.variant-active { background-color: #dcfce7; color: #22c55e; }
+.modal-title { font-size: 1.25rem; font-weight: 600; margin-bottom: 0.5rem; }
+.modal-message { color: #6b7280; margin-bottom: 1.5rem; }
+.modal-actions { display: grid; grid-template-columns: 1fr 1fr; gap: 1rem; }
+.modal-button { padding: 0.75rem; border-radius: 0.5rem; border: 1px solid #d1d5db; font-weight: 600; cursor: pointer; }
+.modal-button.confirm.variant-delete { background-color: #ef4444; color: white; border-color: #ef4444; }
+.modal-button.confirm.variant-inactive { background-color: #ef4444; color: white; border-color: #ef4444; }
+.modal-button.confirm.variant-active { background-color: #22c55e; color: white; border-color: #22c55e; }

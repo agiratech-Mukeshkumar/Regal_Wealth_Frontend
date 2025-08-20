@@ -1,0 +1,16 @@
+.tool-layout { display: grid; grid-template-columns: 1fr 400px; gap: 2rem; align-items: start; }
+.tool-form-section { background: #fff; padding: 1.5rem; border-radius: 0.5rem; box-shadow: 0 2px 4px rgba(0,0,0,0.05); }
+.tool-title { font-size: 1.5rem; font-weight: 700; margin-bottom: 1.5rem; }
+.calculate-button { width: 100%; background-color: #1e40af; color: white; border: none; padding: 0.75rem; border-radius: 0.5rem; font-weight: 600; cursor: pointer; margin-top: 1rem; }
+.tool-results-section { background: #f9fafb; border-radius: 0.5rem; padding: 1.5rem; }
+.result-card { background-color: #1e3a8a; color: white; padding: 1.5rem; border-radius: 0.5rem; text-align: center; }
+.taxes-owed { font-size: 2.5rem; font-weight: 700; margin-top: 0.5rem; }
+.result-group { margin-top: 1.5rem; }
+.result-group h5 { font-weight: 600; margin-bottom: 0.5rem; }
+.result-row { display: flex; justify-content: space-between; padding: 0.75rem 0; border-bottom: 1px solid #e5e7eb; }
+.result-row.total { font-weight: 700; }
+.tax-rate-cards { display: grid; grid-template-columns: 1fr 1fr; gap: 1rem; margin-top: 1.5rem; }
+.rate-card { background-color: #fff; text-align: center; padding: 1rem; border-radius: 0.5rem; border: 1px solid #e5e7eb; }
+.rate-card span { display: block; font-size: 0.875rem; color: #6b7280; }
+.rate-card strong { display: block; font-size: 1.25rem; font-weight: 700; margin-top: 0.25rem; }
+.tax-burden-chart { margin-top: 2rem; } 
