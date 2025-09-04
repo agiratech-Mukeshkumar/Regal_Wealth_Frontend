@@ -291,3 +291,115 @@ def create_form_field(form_name):
     finally:
         cursor.close()
         conn.close()
+
+from flask import Blueprint, jsonify, request
+from utils.db import get_db_connection
+# Make sure to import these at the top of your file
+from werkzeug.security import generate_password_hash
+import uuid
+from utils.email_sender import send_welcome_email_with_password
+import mysql.connector
+
+
+
+@admin_bp.route('/advisors', methods=['GET'])
+@admin_required # <-- FIX: This decorator was missing. Add this line.
+def get_all_advisors():
+    """Fetches a list of all users with the 'advisor' role."""
+    conn = get_db_connection()
+    cursor = conn.cursor(dictionary=True)
+    try:
+        cursor.execute("SELECT id, first_name, last_name, email, role, is_active FROM users WHERE role = 'advisor'")
+        advisors = cursor.fetchall()
+        return jsonify(advisors), 200
+    except Exception as e:
+        return jsonify({"message": f"An error occurred: {e}"}), 500
+    finally:
+        cursor.close()
+        conn.close()
+
+@admin_bp.route('/advisors', methods=['POST'])
+@admin_required
+def add_new_advisor():
+    """Creates a new advisor and emails them their temporary password."""
+    data = request.get_json()
+
+    if not data or not data.get('email') or not data.get('first_name') or not data.get('last_name'):
+        return jsonify({"message": "Email, first name, and last name are required"}), 400
+
+    email = data.get('email')
+    first_name = data.get('first_name')
+    last_name = data.get('last_name')
+    
+    initial_password = str(uuid.uuid4())[:8]
+    hashed_password = generate_password_hash(initial_password)
+
+    conn = get_db_connection()
+    cursor = conn.cursor(dictionary=True)
+    try:
+        cursor.execute(
+            "INSERT INTO users (email, password_hash, role, first_name, last_name) VALUES (%s, %s, 'advisor', %s, %s)",
+            (email, hashed_password, first_name, last_name)
+        )
+        new_advisor_id = cursor.lastrowid
+        conn.commit()
+
+        send_welcome_email_with_password(email, initial_password)
+        
+        cursor.execute("SELECT id, email, first_name, last_name, role, is_active FROM users WHERE id = %s", (new_advisor_id,))
+        new_advisor = cursor.fetchone()
+
+        return jsonify({
+            "message": "Advisor added and welcome email sent.",
+            "advisor": new_advisor
+        }), 201
+
+    except mysql.connector.Error as err:
+        conn.rollback()
+        if err.errno == 1062:
+            return jsonify({"message": "An advisor with this email already exists."}), 409
+        return jsonify({"message": f"A database error occurred: {err}"}), 500
+    except Exception as e:
+        conn.rollback()
+        return jsonify({"message": f"An unexpected error occurred: {e}"}), 500
+    finally:
+        cursor.close()
+        conn.close()
+
+# Add this new route to your admin/routes.py file
+
+@admin_bp.route('/clients', methods=['GET'])
+@admin_required
+def get_all_clients():
+    """
+    Fetches a list of all clients and the advisor they are assigned to.
+    """
+    conn = get_db_connection()
+    cursor = conn.cursor(dictionary=True)
+    try:
+        # This SQL query joins the users table with itself through the mapping table
+        # to get both client and advisor names in a single query.
+        # COALESCE is used to handle clients who might not have an advisor assigned yet.
+        sql = """
+            SELECT 
+                c.id, 
+                c.first_name, 
+                c.last_name, 
+                c.email, 
+                c.is_active,
+                COALESCE(CONCAT(a.first_name, ' ', a.last_name), 'Not Assigned') as advisor_name
+            FROM users c
+            LEFT JOIN advisor_client_map acm ON c.id = acm.client_user_id
+            LEFT JOIN users a ON acm.advisor_user_id = a.id
+            WHERE c.role = 'client'
+            ORDER BY c.created_at DESC
+        """
+        cursor.execute(sql)
+        clients = cursor.fetchall()
+        return jsonify(clients), 200
+    except Exception as e:
+        return jsonify({"message": f"An error occurred: {e}"}), 500
+    finally:
+        cursor.close()
+        conn.close()
+

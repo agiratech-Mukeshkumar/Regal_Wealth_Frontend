@@ -23,34 +23,23 @@
 -- Table `users`: The master table for all individuals who can log in.
 
 CREATE TABLE `users` (
+  `id` INT AUTO_INCREMENT PRIMARY KEY,
+  `email` VARCHAR(255) NOT NULL UNIQUE,
+  `password_hash` VARCHAR(255) NOT NULL,
+  `role` ENUM('admin', 'advisor', 'client') NOT NULL,
+  `first_name` VARCHAR(100) NOT NULL,
+  `last_name` VARCHAR(100) NOT NULL,
+  `mobile_country` VARCHAR(10),          -- e.g., 'US', 'IN'
+  `mobile_code` VARCHAR(10),             -- e.g., '+1', '+91'
+  `mobile_number` VARCHAR(20),           -- The actual number
+  `profile_picture_url` VARCHAR(512),
+  `is_active` BOOLEAN DEFAULT TRUE,
+  `two_factor_secret` VARCHAR(255) NULL,
+  `is_2fa_enabled` BOOLEAN DEFAULT TRUE,
+  `created_at` TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
+  `last_login` TIMESTAMP NULL
+);
 
-`id` INT AUTO_INCREMENT PRIMARY KEY,
-
-`email` VARCHAR(255) NOT NULL UNIQUE,
-
-`password_hash` VARCHAR(255) NOT NULL,
-
-`role` ENUM('admin', 'advisor', 'client') NOT NULL,
-
-`first_name` VARCHAR(100) NOT NULL,
-
-`last_name` VARCHAR(100) NOT NULL,
-
-`phone_number` VARCHAR(20),
-
-`profile_picture_url` VARCHAR(512),
-
-`is_active` BOOLEAN DEFAULT TRUE,
-
-`two_factor_secret` VARCHAR(255) NULL,
-
-`is_2fa_enabled` BOOLEAN DEFAULT TRUE,
-
-`created_at` TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
-
-`last_login` TIMESTAMP NULL
-
-)
 
 
 

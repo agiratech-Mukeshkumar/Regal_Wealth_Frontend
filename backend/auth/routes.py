@@ -9,17 +9,6 @@ from config import Config
 
 auth_bp = Blueprint('auth_bp', __name__)
 
-import jwt
-from werkzeug.security import check_password_hash
-import datetime
-import random
-from flask import Blueprint, request, jsonify
-from utils.db import get_db_connection
-from utils.email_sender import send_2fa_code_email
-from config import Config
-
-auth_bp = Blueprint('auth_bp', __name__)
-
 @auth_bp.route('/login', methods=['POST'])
 def login():
     data = request.get_json()
@@ -49,7 +38,8 @@ def login():
             "role": user['role'],
             "first_name": user['first_name'],
             "last_name": user['last_name'],
-            "is_2fa_enabled": bool(user.get('is_2fa_enabled', False)) # Safely get the value
+            "is_2fa_enabled": bool(user.get('is_2fa_enabled', False)), # Safely get the value
+            "mobile_number":user['mobile_number']
         }
 
         if user.get('is_2fa_enabled'):
@@ -121,7 +111,7 @@ def verify_2fa():
 
         # --- THIS IS THE FIX ---
         # Fetch all necessary fields to build the complete user object
-        cursor.execute("SELECT id, email, role, first_name, last_name, is_2fa_enabled FROM users WHERE id = %s", (user_id,))
+        cursor.execute("SELECT id, email, role, first_name, last_name, is_2fa_enabled , mobile_number FROM users WHERE id = %s", (user_id,))
         user = cursor.fetchone()
 
         final_token = jwt.encode({
@@ -132,7 +122,8 @@ def verify_2fa():
         user_payload_for_frontend = {
             "id": user['id'], "email": user['email'], "role": user['role'],
             "first_name": user['first_name'],"last_name": user["last_name"],
-            "is_2fa_enabled": bool(user.get('is_2fa_enabled', False))
+            "is_2fa_enabled": bool(user.get('is_2fa_enabled', False)),
+            "mobile_number":user['mobile_number']
         }
 
         cursor.execute("DELETE FROM two_factor_codes WHERE user_id = %s", (user_id,)); conn.commit()

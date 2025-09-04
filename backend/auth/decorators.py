@@ -1,5 +1,5 @@
 from functools import wraps
-from flask import request, jsonify
+from flask import request, jsonify, current_app
 import jwt
 from config import Config
 
@@ -27,6 +27,36 @@ def token_required(f):
         return f(*args, **kwargs)
     return decorated
 
+def document_token_required(f):
+    @wraps(f)
+    def decorated(*args, **kwargs):
+        token = None
+        
+        if 'Authorization' in request.headers:
+            auth_header = request.headers['Authorization']
+            try:
+                token = auth_header.split(" ")[1]
+            except IndexError:
+                pass 
+
+        if not token and 'token' in request.args:
+            token = request.args.get('token')
+
+        if not token:
+            return jsonify({'message': 'Token is missing!'}), 401
+
+        try:
+            # Using current_app.config to safely access the running app's configuration
+            data = jwt.decode(token, current_app.config['JWT_SECRET_KEY'], algorithms=["HS256"])
+            kwargs['current_user'] = data
+        except jwt.ExpiredSignatureError:
+            return jsonify({'message': 'Token has expired!'}), 401
+        except jwt.InvalidTokenError:
+            return jsonify({'message': 'Token is invalid!'}), 401
+        
+        return f(*args, **kwargs)
+    return decorated
+
 def admin_required(f):
     """A decorator to ensure the user is an admin."""
     @wraps(f)
@@ -42,7 +72,14 @@ def admin_required(f):
         return f(*args, **kwargs)
     return decorated
 
-
+def advisor_document_required(f):
+    @wraps(f)
+    @document_token_required
+    def decorated(current_user, *args, **kwargs):
+        if current_user['role'] != 'advisor':
+            return jsonify({"message": "Advisor role required!"}), 403
+        return f(current_user, *args, **kwargs)
+    return decorated
 
 # Add this function to your auth/decorators.py file
 
