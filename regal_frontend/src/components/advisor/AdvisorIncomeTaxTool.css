@@ -1,16 +1,188 @@
-.tool-layout { display: grid; grid-template-columns: 1fr 400px; gap: 2rem; align-items: start; }
-.tool-form-section { background: #fff; padding: 1.5rem; border-radius: 0.5rem; box-shadow: 0 2px 4px rgba(0,0,0,0.05); }
-.tool-title { font-size: 1.5rem; font-weight: 700; margin-bottom: 1.5rem; }
-.calculate-button { width: 100%; background-color: #1e40af; color: white; border: none; padding: 0.75rem; border-radius: 0.5rem; font-weight: 600; cursor: pointer; margin-top: 1rem; }
-.tool-results-section { background: #f9fafb; border-radius: 0.5rem; padding: 1.5rem; }
-.result-card { background-color: #1e3a8a; color: white; padding: 1.5rem; border-radius: 0.5rem; text-align: center; }
-.taxes-owed { font-size: 2.5rem; font-weight: 700; margin-top: 0.5rem; }
+/* --- Main Page & Layout --- */
+.tax-tool-page {
+    padding: 2rem;
+    background-color: #f8f9fc;
+    
+}
+
+.tool-layout {
+    display: grid;
+    grid-template-columns: 2fr 1fr;
+    gap: 2rem;
+    align-items: start;
+}
+
+/* --- Left Side: Form Section --- */
+.tool-form-section {
+    background: #fff;
+    padding: 2rem;
+    border-radius: 0.75rem;
+    box-shadow: 0 4px 12px rgba(0,0,0,0.05);
+    border: 1px solid #e2e8f0;
+}
+
+.tool-title {
+    font-size: 1.75rem;
+    font-weight: 700;
+    color: #1e293b;
+    margin: 0 0 2rem 0;
+}
+
+.form-grid {
+    display: grid;
+    grid-template-columns: repeat(2, 1fr);
+    gap: 1.5rem;
+}
+
+.form-group {
+    display: flex;
+    flex-direction: column;
+}
+
+.form-group.span-2 {
+    grid-column: span 2;
+}
+
+.form-group label {
+    font-size: 0.875rem;
+    font-weight: 500;
+    color: #475569;
+    margin-bottom: 0.5rem;
+}
+
+.form-group input[type="number"],
+.form-group input[type="text"],
+.form-group select {
+    width: 100%;
+    padding: 0.75rem;
+    border: 1px solid #cbd5e1;
+    border-radius: 0.5rem;
+    font-size: 1rem;
+    background-color: #f8fafc;
+}
+.mobile-input-group {
+  display: flex; 
+  gap: 8px;     
+}
+
+.mobile-input-group select {
+  width: 110px;  
+}
+
+.mobile-input-group .mobile-number-wrapper input {
+  width: 290px;  
+}
+
+.checkbox-group {
+    display: flex;
+    gap: 1.5rem;
+    margin-top: 0.75rem;
+}
+
+.checkbox-group label {
+    display: flex;
+    align-items: center;
+    gap: 0.5rem;
+    font-size: 0.875rem;
+    font-weight: 400;
+}
+
+.form-actions {
+    grid-column: span 2;
+    display: flex;
+    justify-content: flex-end;
+    align-items: center;
+    gap: 1rem;
+    margin-top: 2rem;
+    padding-top: 1.5rem;
+    border-top: 1px solid #f1f5f9;
+}
+
+.plan-name-input {
+    margin-right: auto;
+    max-width: 200px;
+}
+
+.save-button, .calculate-button {
+    border: none;
+    padding: 0.75rem 1.5rem;
+    border-radius: 0.5rem;
+    font-weight: 600;
+    cursor: pointer;
+    transition: background-color 0.2s;
+}
+
+.save-button {
+    background-color: #f1f5f9;
+    color: #334155;
+}
+.save-button:hover { background-color: #e2e8f0; }
+
+.calculate-button {
+    background-color: #2563eb;
+    color: white;
+}
+.calculate-button:hover { background-color: #1d4ed8; }
+.calculate-button:disabled { background-color: #94a3b8; cursor: not-allowed; }
+
+
+.tax-burden-section {
+    margin-top: 2rem;
+    padding-top: 2rem;
+    border-top: 1px solid #f1f5f9;
+    display: flex;
+    gap: 2rem;
+    align-items: center;
+}
+.burden-summary { flex: 1; }
+.burden-summary h4 { font-size: 1.1rem; font-weight: 600; margin-bottom: 1rem; }
+.burden-summary ul { list-style: none; padding: 0; margin: 0; }
+.burden-summary li { display: flex; align-items: center; margin-bottom: 0.75rem; font-size: 0.9rem; }
+.legend-dot { width: 12px; height: 12px; border-radius: 50%; margin-right: 0.75rem; }
+.legend-value { margin-left: auto; font-weight: 500; }
+.total-burden { font-weight: 700; margin-top: 1rem; display: flex; justify-content: space-between; font-size: 1rem; }
+.burden-chart { width: 200px; height: 200px; }
+
+
+.tool-results-section {
+    background: #f8fafc;
+    border-radius: 0.75rem;
+    padding: 1.5rem;
+    border: 1px solid #e2e8f0;
+}
+.results-header { display: flex; justify-content: space-between; align-items: center; }
+.results-header h4 { font-size: 1.1rem; font-weight: 600; margin: 0; }
+.info-button { background: none; border: 1px solid #cbd5e1; border-radius: 50%; width: 24px; height: 24px; cursor: pointer; font-weight: 700; color: #475569; }
+.no-results { text-align: center; padding: 4rem 1rem; color: #64748b; }
+
+.error-message {
+    color: #dc2626;
+    font-weight: 500;
+}
+
+.result-card { background-color: #1e3a8a; color: white; padding: 1.5rem; border-radius: 0.5rem; text-align: center; margin-top: 1rem; }
+.taxes-owed { font-size: 2.25rem; font-weight: 700; margin: 0.5rem 0 0 0; letter-spacing: -1px; }
+
 .result-group { margin-top: 1.5rem; }
-.result-group h5 { font-weight: 600; margin-bottom: 0.5rem; }
-.result-row { display: flex; justify-content: space-between; padding: 0.75rem 0; border-bottom: 1px solid #e5e7eb; }
+.result-group h5 { font-weight: 600; margin-bottom: 0.5rem; font-size: 1rem; color: #334155; }
+.result-row { display: flex; justify-content: space-between; padding: 0.75rem 0; border-bottom: 1px solid #e5e7eb; font-size: 0.9rem; }
+.result-row span:first-child { color: #475569; }
+.result-row span:last-child { font-weight: 500; color: #1e293b; }
 .result-row.total { font-weight: 700; }
-.tax-rate-cards { display: grid; grid-template-columns: 1fr 1fr; gap: 1rem; margin-top: 1.5rem; }
+.result-row.total.dark { background-color: #1e293b; color: white; padding: 0.75rem; border-radius: 0.375rem; margin-top: 0.5rem; }
+.result-row.total.dark span { color: white; }
+
+.tax-rate-header { margin: 1.5rem 0 0.5rem 0; font-weight: 600; }
+.tax-rate-cards { display: grid; grid-template-columns: 1fr 1fr; gap: 1rem; }
 .rate-card { background-color: #fff; text-align: center; padding: 1rem; border-radius: 0.5rem; border: 1px solid #e5e7eb; }
 .rate-card span { display: block; font-size: 0.875rem; color: #6b7280; }
-.rate-card strong { display: block; font-size: 1.25rem; font-weight: 700; margin-top: 0.25rem; }
-.tax-burden-chart { margin-top: 2rem; } 
+.rate-card strong { display: block; font-size: 1.25rem; font-weight: 700; margin-top: 0.25rem; color: #1e3a8a; }
+
+
+.marginal-rate-chart { margin-top: 2rem; }
+.chart-header { display: flex; justify-content: space-between; align-items: baseline; }
+.chart-header h5 { font-size: 1rem; font-weight: 600; margin: 0; }
+.chart-header span { font-size: 0.8rem; color: #64748b; }
+.chart-legend { display: flex; gap: 1rem; font-size: 0.75rem; margin: 0.5rem 0 1rem 0; }
+.chart-legend .dot { width: 10px; height: 10px; border-radius: 50%; display: inline-block; margin-right: 4px; }
+.chart-legend .blue { background-color: #60a5fa; }

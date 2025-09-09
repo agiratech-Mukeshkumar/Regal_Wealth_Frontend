@@ -1,0 +1,130 @@
+
+.form-builder-main {
+    padding: 1.5rem;
+    background-color: #f9fafb;
+}
+
+
+.form-builder-actions {
+    display: flex;
+    justify-content: flex-end;
+    margin-bottom: 1.5rem;
+}
+
+.add-main-question-btn {
+    display: inline-flex;
+    align-items: center;
+    gap: 0.5rem;
+    background-color: #1e40af;
+    color: white;
+    font-weight: 600;
+    border: none;
+    border-radius: 0.5rem;
+    padding: 0.6rem 1.2rem;
+    cursor: pointer;
+}
+
+.main-question-card {
+    background-color: #ffffff;
+    border: 1px solid #e5e7eb;
+    border-radius: 0.75rem;
+    box-shadow: 0 1px 3px rgba(0,0,0,0.05);
+}
+
+.mq-header {
+    display: flex;
+    align-items: center;
+    gap: 1rem;
+    padding: 1rem 1.5rem;
+}
+
+.mq-title-input {
+    flex-grow: 1;
+    border: none;
+    background: none;
+    font-size: 1.1rem;
+    font-weight: 600;
+    padding: 0.25rem;
+    border-radius: 0.25rem;
+}
+.mq-title-input:focus {
+    outline: none;
+    background-color: #f3f4f6;
+}
+
+.sq-type-select {
+    padding: 0.6rem 0.8rem;
+    border: 1px solid #d1d5db;
+    border-radius: 0.5rem;
+    background-color: #fff;
+}
+
+
+.options-container {
+    padding: 1.5rem;
+    background-color: #f9fafb;
+    border-top: 1px solid #e5e7eb;
+}
+
+.option-row {
+    display: flex;
+    align-items: center;
+    gap: 1rem;
+    margin-bottom: 1rem;
+}
+
+.option-label-input {
+    flex-grow: 1; 
+    min-width: 200px;
+}
+
+.details-label-input {
+    width: 250px; 
+}
+
+.option-label-input, .details-label-input {
+    padding: 0.6rem 0.8rem;
+    border: 1px solid #d1d5db;
+    border-radius: 0.5rem;
+}
+
+.option-details-toggle {
+    display: flex;
+    align-items: center;
+    gap: 0.5rem;
+    white-space: nowrap;
+}
+
+.option-details-toggle label {
+    font-size: 0.9rem;
+    color: #4b5563;
+    cursor: pointer;
+    user-select: none;
+}
+
+.add-sub-question-btn {
+    display: inline-flex;
+    align-items: center;
+    gap: 0.5rem;
+    background: none;
+    border: 1px dashed #d1d5db;
+    color: #4b5563;
+    padding: 0.5rem 1rem;
+    border-radius: 0.5rem;
+    cursor: pointer;
+    margin-top: 1rem;
+}
+
+.delete-option-btn {
+    background-color: #fee2e2;
+    color: #ef4444;
+    border: none;
+    width: 30px;
+    height: 30px;
+    border-radius: 50%;
+    font-weight: bold;
+    cursor: pointer;
+    font-size: 1.2rem;
+    line-height: 1;
+    flex-shrink: 0;
+}

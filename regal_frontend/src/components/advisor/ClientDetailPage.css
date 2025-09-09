@@ -1,0 +1,212 @@
+.client-detail-page {
+    padding: 2rem;
+    background-color: #f8f9fc;
+}
+
+.client-detail-page .page-header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin-bottom: 2rem;
+}
+
+.client-detail-page h2 {
+    font-size: 1.75rem;
+    font-weight: 700;
+}
+
+.schedule-button {
+    background-color: #1e40af;
+    color: white;
+    border: none;
+    padding: 0.6rem 1.5rem;
+    border-radius: 0.5rem;
+    font-weight: 600;
+    cursor: pointer;
+    transition: background-color 0.2s;
+}
+
+.schedule-button:hover {
+    background-color: #1c3d9a;
+}
+
+.detail-cards-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+    gap: 1.5rem;
+}
+
+.detail-card {
+    background-color: #ffffff;
+    padding: 1.5rem;
+    border-radius: 0.75rem;
+    box-shadow: 0 4px 6px rgba(0,0,0,0.05);
+    border: 1px solid #e2e8f0;
+}
+
+.detail-card h3 {
+    font-size: 1.1rem;
+    font-weight: 600;
+    border-bottom: 1px solid #f0f0f0;
+    padding-bottom: 0.75rem;
+    margin-bottom: 1rem;
+    margin-top: 0;
+}
+
+.detail-card p {
+    margin-bottom: 0.5rem;
+    color: #374151;
+    font-size: 0.9rem;
+}
+
+.detail-card p strong {
+    color: #6b7280;
+    margin-right: 0.5rem;
+    font-weight: 500;
+}
+
+.summary-card .net-worth {
+    margin-top: 1rem;
+    padding-top: 1rem;
+    border-top: 1px solid #f0f0f0;
+    font-size: 1rem;
+}
+.summary-card .net-worth strong {
+    font-weight: 700;
+    color: #1e293b;
+}
+
+.error-message {
+    color: #991b1b;
+}
+
+.full-details-section {
+    margin-top: 2.5rem;
+    background-color: #ffffff;
+    padding: 2rem;
+    border-radius: 0.75rem;
+    box-shadow: 0 4px 6px rgba(0,0,0,0.05);
+    border: 1px solid #e2e8f0;
+}
+.full-details-section > h3 {
+    font-size: 1.5rem;
+    margin-top: 0;
+}
+
+.summary-table-container {
+    margin-top: 2rem;
+}
+.summary-table-container h4 {
+    font-size: 1.2rem;
+    margin-bottom: 1rem;
+}
+.summary-table-container h5 {
+    font-size: 0.9rem;
+    font-weight: 600;
+    color: #64748b;
+    text-transform: uppercase;
+    margin: 1.5rem 0 0.5rem 0;
+}
+
+.summary-table {
+    width: 100%;
+    border-collapse: collapse;
+}
+.summary-table td {
+    padding: 0.75rem;
+    border-bottom: 1px solid #f1f5f9;
+}
+.summary-table tr:last-child td {
+    border-bottom: none;
+}
+.summary-table td:last-child {
+    text-align: right;
+    font-weight: 600;
+    color: #1e3a8a;
+}
+.view-doc-button {
+    background: none;
+    border: none;
+    color: #3b82f6;
+    font-weight: 600;
+    cursor: pointer;
+    font-size: 0.9rem;
+}
+
+.modal-overlay {
+    position: fixed;
+    inset: 0;
+    background-color: rgba(0, 0, 0, 0.6);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    z-index: 1000;
+}
+.modal-content.pdf-modal {
+    background-color: white;
+    padding: 1.5rem;
+    border-radius: 1rem;
+    width: 90%;
+    max-width: 900px;
+    height: 90vh;
+    display: flex;
+    flex-direction: column;
+}
+.pdf-viewer-container {
+    flex-grow: 1;
+    margin-top: 1rem;
+}
+.pdf-viewer-container iframe {
+    border: 1px solid #e5e7eb;
+    border-radius: 0.5rem;
+    width: 100%;
+    height: 100%;
+}
+.modal-header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+}
+.modal-header h3 {
+    font-size: 1.25rem;
+    font-weight: 600;
+    margin: 0;
+}
+.close-button {
+    background: none;
+    border: none;
+    font-size: 1.75rem;
+    cursor: pointer;
+    color: #9ca3af;
+}
+
+
+.summary-answer-list-advisor {
+    list-style: disc;
+    padding-left: 20px;
+    margin: 0;
+    text-align: left;
+}
+
+.summary-answer-list-advisor li {
+    margin-bottom: 0.5rem;
+}
+
+.summary-detail-text-advisor {
+    color: #4b5563;
+    font-style: italic;
+    margin-left: 0.5rem;
+}
+
+.financials-subtitle {
+    font-size: 1rem;
+    font-weight: 600;
+    margin-top: 1rem;
+    margin-bottom: 0.5rem;
+    padding-left: 0.5rem;
+}
+
+.summary-table.sub-table {
+    margin-left: 1rem;
+    width: calc(100% - 1rem);
+}

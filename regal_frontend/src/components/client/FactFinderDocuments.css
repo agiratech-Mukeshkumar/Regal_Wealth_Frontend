@@ -1,0 +1,210 @@
+
+.documents-page .wizard-form {
+    background-color: transparent;
+    box-shadow: none;
+    padding: 0;
+}
+
+.document-page-content {
+    background-color: #fff;
+    padding: 2rem;
+    border-radius: 0.75rem;
+    box-shadow: 0 4px 6px rgba(0,0,0,0.05);
+}
+
+.document-table-header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin-bottom: 1rem;
+    padding-bottom: 1rem;
+    border-bottom: 1px solid #f1f5f9;
+}
+
+.document-table-header span {
+    font-size: 0.9rem;
+    color: #64748b;
+}
+
+.add-link {
+    font-weight: 600;
+    color: #3b82f6;
+    cursor: pointer;
+    background: none;
+    border: none;
+    font-size: 0.9rem;
+}
+
+.document-table {
+    width: 100%;
+    border-collapse: collapse;
+}
+
+.document-table th, .document-table td {
+    padding: 1rem 0.5rem;
+    text-align: left;
+    border-bottom: 1px solid #f1f5f9;
+    vertical-align: middle;
+}
+
+.document-table th {
+    font-size: 0.8rem;
+    text-transform: uppercase;
+    color: #64748b;
+    font-weight: 600;
+}
+
+.document-name-input {
+    border: 1px solid #cbd5e1;
+    border-radius: 0.5rem;
+    padding: 0.6rem 0.8rem;
+    font-size: 0.9rem;
+    width: 90%;
+}
+
+.choose-file-btn {
+    background: none;
+    border: 1px solid #cbd5e1;
+    border-radius: 0.5rem;
+    padding: 0.6rem 1.2rem;
+    cursor: pointer;
+    font-size: 0.9rem;
+    font-weight: 500;
+}
+
+.progress-bar-container {
+    height: 6px;
+    background-color: #e5e7eb;
+    border-radius: 3px;
+    margin-top: 8px;
+    overflow: hidden;
+}
+
+.progress-bar {
+    height: 100%;
+    background-color: #3b82f6;
+    border-radius: 3px;
+    transition: width 0.3s ease;
+}
+
+.actions-cell {
+    display: flex;
+    gap: 0.75rem;
+    justify-content: flex-end;
+}
+
+.icon-btn {
+    background-color: #f1f5f9;
+    border: 1px solid #e2e8f0;
+    color: #64748b;
+    border-radius: 50%;
+    width: 36px;
+    height: 36px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    cursor: pointer;
+}
+.icon-btn.delete {
+    background-color: #fee2e2;
+    border-color: #fecaca;
+    color: #ef4444;
+}
+
+
+.document-name-text, .file-name-text {
+    font-size: 0.9rem;
+    padding: 0.6rem 0.8rem;
+    color: #374151;
+}
+
+.text-btn {
+    background: none;
+    border: none;
+    font-size: 0.9rem;
+    font-weight: 600;
+    cursor: pointer;
+    padding: 0.5rem;
+}
+.text-btn.view {
+    color: #3b82f6;
+}
+.text-btn.delete {
+    color: #ef4444;
+}
+
+
+.modal-overlay {
+    position: fixed;
+    inset: 0;
+    background-color: rgba(0, 0, 0, 0.6);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    z-index: 1000;
+}
+
+.upload-modal-content {
+    background-color: white;
+    padding: 1.5rem;
+    border-radius: 1rem;
+    width: 90%;
+    max-width: 500px;
+}
+
+
+.upload-modal-content.pdf-modal {
+    max-width: 900px;
+    height: 90vh;
+    display: flex;
+    flex-direction: column;
+}
+.pdf-viewer-container {
+    flex-grow: 1;
+    margin-top: 1rem;
+}
+.pdf-viewer-container iframe {
+    border: 1px solid #e5e7eb;
+    border-radius: 0.5rem;
+}
+.modal-header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+}
+.modal-header h3 {
+    font-size: 1.25rem;
+    font-weight: 600;
+}
+.close-button {
+    background: none;
+    border: none;
+    font-size: 1.75rem;
+    cursor: pointer;
+    color: #9ca3af;
+}
+
+.drag-drop-area {
+    border: 2px dashed #d1d5db;
+    border-radius: 0.75rem;
+    padding: 3rem 2rem;
+    text-align: center;
+    margin-top: 1.5rem;
+}
+.drag-drop-area p {
+    margin: 1rem 0 0.5rem 0;
+    font-size: 1rem;
+    color: #374151;
+}
+.drag-drop-area .upload-link {
+    color: #3b82f6;
+    font-weight: 600;
+    cursor: pointer;
+}
+.drag-drop-area small {
+    color: #6b7280;
+}
+.drag-drop-area input[type="file"] {
+    display: none;
+}
+

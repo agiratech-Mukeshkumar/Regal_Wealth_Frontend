@@ -1,135 +1,203 @@
-import React, { useState, useEffect } from 'react';
+    import React, {useState, useEffect}from 'react';
+    import { useAuth } from '../../auth/AuthContext';
+    import './AdvisorSettingsPage.css'; 
 
-import '../../pages/FactFinder.css'; // Reusing styles
-import { useAuth } from '../../auth/AuthContext';
-
-// Define a specific type for the data sent to the API
-type SecurityPayload = {
-    current_password?: string;
-    new_password?: string;
-    is_2fa_enabled?: boolean;
-};
-
-const AdvisorSettingsPage: React.FC = () => {
-    const { token, user, updateUser } = useAuth(); // Get the updateUser function from context
     
-    // Initialize state from the global user object
-    const [is2faEnabled, setIs2faEnabled] = useState<boolean>(user?.is_2fa_enabled ?? true);
-    
-    const [currentPassword, setCurrentPassword] = useState('');
-    const [newPassword, setNewPassword] = useState('');
-    const [confirmPassword, setConfirmPassword] = useState('');
-    const [message, setMessage] = useState('');
-    const [error, setError] = useState('');
-    const [isLoading, setIsLoading] = useState(false);
+    type SecurityPayload = {
+        current_password?: string;
+        new_password?: string;
+        is_2fa_enabled?: boolean;
+        first_name?: string;
+        last_name?: string;
+        mobile_number?: string;
+    };
 
-    // --- THIS IS THE BUG FIX ---
-    // This useEffect hook runs whenever the global 'user' object changes (e.g., after a new login).
-    // It ensures the local state of the toggle is always in sync with the latest user data.
-    useEffect(() => {
-        if (user) {
-            setIs2faEnabled(user.is_2fa_enabled);
-        }
-    }, [user]);
+    const AdvisorSettingsPage: React.FC = () => {
+        const { token, user, updateUser } = useAuth();
 
-    const handleSaveChanges = async (payload: SecurityPayload) => {
-        setIsLoading(true);
-        setMessage('');
-        setError('');
-        try {
-            // Call the advisor-specific endpoint
-            const response = await fetch('http://localhost:5000/api/advisor/settings/security', {
-                method: 'PUT',
-                headers: { 'Content-Type': 'application/json', 'Authorization': `Bearer ${token}` },
-                body: JSON.stringify(payload)
-            });
-            const data = await response.json();
-            if (!response.ok) throw new Error(data.message);
+        
+        const [isEditingInfo, setIsEditingInfo] = useState(false);
+        const [userInfo, setUserInfo] = useState({
+            first_name: user?.first_name || '',
+            last_name: user?.last_name || '',
+            mobile_number: user?.mobile_number,
+            email: user?.email || ''
+        });
+
+        
+        const [currentPassword, setCurrentPassword] = useState('');
+        const [newPassword, setNewPassword] = useState('');
+        const [confirmPassword, setConfirmPassword] = useState('');
+        
+        
+        const [isEmail2fa, setIsEmail2fa] = useState(user?.is_2fa_enabled ?? true);
+        const [isPhone2fa, setIsPhone2fa] = useState(false);
+
+        
+        const [message, setMessage] = useState('');
+        const [error, setError] = useState('');
+        const [isLoading, setIsLoading] = useState(false);
+
+        useEffect(() => {
+            if (user) {
+                setUserInfo({
+                    first_name: user.first_name,
+                    last_name: user.last_name,
+                    mobile_number: user.mobile_number, 
+                    email: user.email
+                });
+                setIsEmail2fa(user.is_2fa_enabled);
+            }
+        }, [user]);
+
+        const handleApiCall = async (payload: SecurityPayload, successMessage: string) => {
+            setIsLoading(true);
+            setMessage('');
+            setError('');
+            try {
+               
+                const response = await fetch('http://localhost:5000/api/advisor/settings/security', {
+                    method: 'PUT',
+                    headers: { 'Content-Type': 'application/json', 'Authorization': `Bearer ${token}` },
+                    body: JSON.stringify(payload)
+                });
+                const data = await response.json();
+                if (!response.ok) throw new Error(data.message);
+                
+                setMessage(successMessage);
+                if (payload.is_2fa_enabled !== undefined) {
+                    updateUser({ is_2fa_enabled: payload.is_2fa_enabled });
+                }
+            } catch (err: any) {
+                setError(err.message);
+            } finally {
+                setIsLoading(false);
+            }
+        };
+
+        const handleInfoSubmit = (e: React.FormEvent) => {
+            e.preventDefault();
             
-            setMessage(data.message);
+            console.log("Saving advisor info:", userInfo);
+            setIsEditingInfo(false);
+            setMessage("Personal information updated successfully.");
+        };
 
-            // After a successful API call, update the global user state
-            if (payload.is_2fa_enabled !== undefined) {
-                updateUser({ is_2fa_enabled: payload.is_2fa_enabled });
+        const handlePasswordSubmit = (e: React.FormEvent) => {
+            e.preventDefault();
+            if (newPassword !== confirmPassword) {
+                setError("New passwords do not match.");
+                return;
             }
+            handleApiCall(
+                { current_password: currentPassword, new_password: newPassword },
+                "Password updated successfully."
+            );
+            setCurrentPassword('');
+            setNewPassword('');
+            setConfirmPassword('');
+        };
+        
+        const handleInfoChange = (e: React.ChangeEvent<HTMLInputElement>) => {
+            setUserInfo({ ...userInfo, [e.target.name]: e.target.value });
+        };
 
-        } catch (err: any) {
-            setError(err.message);
-            // If the API call fails, revert the toggle to its original state
-            if (payload.is_2fa_enabled !== undefined) {
-                 setIs2faEnabled(user?.is_2fa_enabled ?? true);
+        const handle2faToggle = (method: 'email' | 'phone') => {
+            if (method === 'email') {
+                const newState = !isEmail2fa;
+                setIsEmail2fa(newState);
+                setIsPhone2fa(false);
+                handleApiCall({ is_2fa_enabled: newState }, "2FA settings updated.");
+            } else {
+                const newState = !isPhone2fa;
+                setIsPhone2fa(newState);
+                setIsEmail2fa(false);
+                handleApiCall({ is_2fa_enabled: newState }, "2FA settings updated.");
             }
-        } finally {
-            setIsLoading(false);
-        }
-    };
+        };
 
-    const handlePasswordSubmit = (e: React.FormEvent) => {
-        e.preventDefault();
-        if (newPassword !== confirmPassword) {
-            setError("New passwords do not match.");
-            return;
-        }
-        handleSaveChanges({ current_password: currentPassword, new_password: newPassword });
-        setCurrentPassword('');
-        setNewPassword('');
-        setConfirmPassword('');
-    };
+        const today = new Date().toLocaleDateString('en-US', { weekday: 'long', year: 'numeric', month: 'long', day: 'numeric' });
 
-    const handle2faToggle = () => {
-        const newState = !is2faEnabled;
-        setIs2faEnabled(newState); // Optimistically update the UI
-        handleSaveChanges({ is_2fa_enabled: newState });
-    };
+        return (
+            <div className="advisor-settings-page">
+                <header className="settings-header">
+                    <div className="user-greeting">
+                        <img src={`https://i.pravatar.cc/150?u=${user?.email}`} alt="User Avatar" className="avatar" />
+                        <div>
+                            <h4>Good Morning, {user?.first_name} {user?.last_name}</h4>
+                            <p>{today}</p>
+                        </div>
+                    </div>
+                </header>
 
-    return (
-        <div className="fact-finder-page">
-            <div className="wizard-header">
-                <h2>Account Settings</h2>
-                <p>Manage your password and account security.</p>
-            </div>
+             
+                <form onSubmit={handleInfoSubmit} className="settings-section">
+                    <div className="section-header">
+                        <h3>Personal Information</h3>
+                        {!isEditingInfo ? (
+                            <button type="button" className="edit-button" onClick={() => setIsEditingInfo(true)}>Edit</button>
+                        ) : (
+                            <button type="submit" className="save-button" disabled={isLoading}>Save</button>
+                        )}
+                    </div>
+                    <div className="info-grid">
+                        <div className="form-group">
+                            <label>First Name</label>
+                            <input type="text" name="first_name" value={userInfo.first_name} onChange={handleInfoChange} disabled={!isEditingInfo} />
+                        </div>
+                        <div className="form-group">
+                            <label>Last Name</label>
+                            <input type="text" name="last_name" value={userInfo.last_name} onChange={handleInfoChange} disabled={!isEditingInfo} />
+                        </div>
+                        <div className="form-group">
+                            <label>Mobile Number</label>
+                            <input type="text" name="mobile_number" value={userInfo.mobile_number} onChange={handleInfoChange} disabled={!isEditingInfo} />
+                        </div>
+                        <div className="form-group">
+                            <label>Email Address</label>
+                            <input type="email" name="email" value={userInfo.email} disabled />
+                        </div>
+                    </div>
+                </form>
 
-            {/* --- 2FA Section --- */}
-            <div className="wizard-form">
-                <h4>Two-Factor Authentication (2FA)</h4>
-                <div className="setting-toggle">
-                    <p>Enable an extra layer of security on your account.</p>
-                    <label className="switch">
-                        <input type="checkbox" checked={is2faEnabled} onChange={handle2faToggle} />
-                        <span className="slider round"></span>
-                    </label>
+                
+                <form onSubmit={handlePasswordSubmit} className="settings-section">
+                    <div className="section-header">
+                        <h3>Reset Password</h3>
+                    </div>
+                    <div className="password-grid">
+                        <input type="password" placeholder="Current Password" value={currentPassword} onChange={e => setCurrentPassword(e.target.value)} required />
+                        <input type="password" placeholder="New Password" value={newPassword} onChange={e => setNewPassword(e.target.value)} required />
+                        <input type="password" placeholder="Re-enter New Password" value={confirmPassword} onChange={e => setConfirmPassword(e.target.value)} required />
+                    </div>
+                    {(currentPassword || newPassword || confirmPassword) && (
+                        <div className="form-actions">
+                            <button type="submit" className="save-button" disabled={isLoading}>{isLoading ? 'Saving...' : 'Save Password'}</button>
+                        </div>
+                    )}
+                </form>
+
+                
+                <div className="settings-section">
+                    <div className="section-header">
+                        <h3>Two Factor Authentication</h3>
+                    </div>
+                    <div className="toggle-grid">
+                        <div className="toggle-option">
+                            <span>Email</span>
+                            <label className="switch">
+                                <input type="checkbox" checked={isEmail2fa} onChange={() => handle2faToggle('email')} />
+                                <span className="slider round"></span>
+                            </label>
+                        </div>
+                        
+                    </div>
                 </div>
+                
+                {message && <p className="form-message success">{message}</p>}
+                {error && <p className="form-message error">{error}</p>}
             </div>
+        );
+    };
 
-            {/* --- Password Section --- */}
-            <div className="wizard-form" style={{marginTop: '2rem'}}>
-                 <h4>Reset Password</h4>
-                 <form onSubmit={handlePasswordSubmit}>
-                    <div className="form-grid">
-                        <div className="form-group">
-                            <label>Current Password</label>
-                            <input type="password" value={currentPassword} onChange={e => setCurrentPassword(e.target.value)} required />
-                        </div>
-                        <div className="form-group"></div> {/* Spacer */}
-                        <div className="form-group">
-                            <label>New Password</label>
-                            <input type="password" value={newPassword} onChange={e => setNewPassword(e.target.value)} required />
-                        </div>
-                         <div className="form-group">
-                            <label>Confirm New Password</label>
-                            <input type="password" value={confirmPassword} onChange={e => setConfirmPassword(e.target.value)} required />
-                        </div>
-                    </div>
-                    <div className="form-actions">
-                        <button type="submit" disabled={isLoading}>{isLoading ? 'Saving...' : 'Change Password'}</button>
-                    </div>
-                 </form>
-            </div>
-            
-            {message && <p className="form-message" style={{color: 'green'}}>{message}</p>}
-            {error && <p className="form-message" style={{color: 'red'}}>{error}</p>}
-        </div>
-    );
-};
-
-export default AdvisorSettingsPage;
+    export default AdvisorSettingsPage;

@@ -1,0 +1,102 @@
+.modal-overlay {
+    position: fixed;
+    inset: 0;
+    background-color: rgba(0, 0, 0, 0.6);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    z-index: 1000;
+}
+
+.modal-content.confirmation-modal {
+    background-color: white;
+    padding: 2rem;
+    border-radius: 1rem;
+    width: 90%;
+    max-width: 400px;
+    text-align: center;
+    box-shadow: 0 10px 25px -5px rgba(0,0,0,0.1);
+}
+
+.confirmation-modal h3 {
+    font-size: 1.25rem;
+    font-weight: 600;
+    margin-top: 1rem;
+    margin-bottom: 0.5rem;
+}
+
+.confirmation-modal p {
+    color: #6b7280;
+    margin-bottom: 2rem;
+}
+
+.confirmation-icon {
+    width: 60px;
+    height: 60px;
+    border-radius: 50%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    margin: 0 auto 1rem auto;
+    font-size: 2rem;
+    font-weight: bold;
+    border: 4px solid #fff; /* To make the inner color look clean */
+}
+
+.confirmation-icon.icon-red {
+    background-color: #fee2e2;
+    color: #ef4444;
+    box-shadow: 0 0 0 4px #fee2e2;
+}
+
+.confirmation-icon.icon-green {
+    background-color: #dcfce7;
+    color: #22c55e;
+     box-shadow: 0 0 0 4px #dcfce7;
+}
+
+.modal-actions {
+    display: flex;
+    justify-content: center;
+    gap: 1rem;
+}
+
+.modal-button {
+    padding: 0.75rem 1.5rem;
+    border-radius: 0.5rem;
+    border: 1px solid transparent;
+    font-weight: 600;
+    cursor: pointer;
+    width: 120px;
+    transition: background-color 0.2s;
+}
+
+.modal-button.cancel {
+    background-color: #fff;
+    color: #374151;
+    border-color: #d1d5db;
+}
+.modal-button.cancel:hover {
+    background-color: #f9fafb;
+}
+
+.modal-button.confirm-red {
+    background-color: #ef4444;
+    color: white;
+}
+.modal-button.confirm-red:hover {
+    background-color: #dc2626;
+}
+
+.modal-button.confirm-green {
+    background-color: #22c55e;
+    color: white;
+}
+.modal-button.confirm-green:hover {
+    background-color: #16a34a;
+}
+
+.modal-button:disabled {
+    opacity: 0.7;
+    cursor: not-allowed;
+}

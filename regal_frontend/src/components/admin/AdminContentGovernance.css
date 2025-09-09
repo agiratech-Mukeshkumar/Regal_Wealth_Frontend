@@ -3,6 +3,6 @@
 .content-tabs button { background: none; border: none; padding: 1rem 0.5rem; margin-right: 1rem; font-weight: 500; color: #6b7280; cursor: pointer; border-bottom: 2px solid transparent; }
 .content-tabs button.active { color: #1e40af; border-bottom-color: #1e40af; }
 .editor-container { padding: 1.5rem; }
-.ql-editor { min-height: 300px; } /* Give the editor some default height */
+.ql-editor { min-height: 300px; } 
 .editor-actions { display: flex; justify-content: flex-end; margin-top: 1.5rem; }
 .update-button { background-color: #1e40af; color: white; border: none; padding: 0.6rem 1.5rem; border-radius: 0.5rem; font-weight: 600; cursor: pointer; }

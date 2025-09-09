@@ -1,11 +1,11 @@
-/* --- Main Page Styles --- */
+
 .tools-hub-page {
     padding: 2rem;
     background-color: #f8f9fc;
 }
 
 .page-main-header {
-    background-color: #f5f3ff; /* Light violet background */
+    background-color: #f5f3ff; 
     border: 1px solid #e0d9ff;
     border-radius: 1rem;
     text-align: center;
@@ -29,20 +29,19 @@
     margin-right: auto;
 }
 
-/* --- Grid for Tool Cards --- */
+
 .tools-grid {
     display: grid;
     grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
     gap: 1.5rem;
 }
 
-/* --- Individual Tool Card Styles --- */
 .tool-card {
     text-decoration: none;
     color: #1e293b;
     display: flex;
     flex-direction: column;
-    height: 320px; /* Fixed height for uniform cards */
+    height: 320px; 
     border-radius: 1.25rem;
     position: relative;
     overflow: hidden;
@@ -55,31 +54,31 @@
     box-shadow: 0 10px 20px -5px rgba(0, 0, 0, 0.1);
 }
 
-/* Card background colors */
+
 .tool-card.blue { background-color: #dbeafe; border-color: #bfdbfe; }
 .tool-card.grey { background-color: #e5e7eb; border-color: #d1d5db; }
 .tool-card.pink { background-color: #fce7f3; border-color: #fbcfe8; }
 .tool-card.violet {
     background-color: #ede9fe;
-    border: 2px solid #c4b5fd; /* Special border for this card */
-    transform: rotate(2deg); /* Slight rotation */
+    border: 2px solid #c4b5fd; 
+    transform: rotate(2deg); 
 }
 .tool-card.violet:hover {
-    transform: translateY(-8px) rotate(2.5deg); /* Enhance rotation on hover */
+    transform: translateY(-8px) rotate(2.5deg); 
 }
 
 
-/* Card Content Layout */
+
 .card-content {
     padding: 1.5rem;
     display: flex;
     flex-direction: column;
     justify-content: space-between;
     height: 100%;
-    z-index: 2; /* Ensures content is above the illustration */
+    z-index: 2; 
 }
 
-/* Background Illustration */
+
 .card-illustration {
     position: absolute;
     bottom: 20%;
@@ -95,7 +94,6 @@
     transform: scale(1.05);
 }
 
-/* Typography inside the card */
 .card-title {
     margin: 0;
     font-size: 0.875rem;
@@ -108,7 +106,7 @@
     font-weight: 700;
     margin: 0;
     line-height: 1.2;
-    max-width: 80%; /* Prevents text from overlapping the arrow */
+    max-width: 80%; 
 }
 
 .card-footer {

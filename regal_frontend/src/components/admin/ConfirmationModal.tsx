@@ -24,7 +24,7 @@ const ConfirmationModal: React.FC<ConfirmationModalProps> = ({ isOpen, onClose, 
         <div className="modal-overlay" onClick={onClose}>
             <div className="confirmation-modal" onClick={(e) => e.stopPropagation()}>
                 <div className={`icon-container ${variantClasses[variant]}`}>
-                    {/* You can use SVG icons here */}
+                   
                     {variant === 'active' ? '✓' : '!'}
                 </div>
                 <h3 className="modal-title">{title}</h3>

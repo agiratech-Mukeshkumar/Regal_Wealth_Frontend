@@ -1,11 +1,10 @@
 import React from 'react';
 import { Link } from 'react-router-dom';
-// I'm assuming your images are in a public/images folder.
-// Replace these with your actual image assets.
-import incomeTaxImg from '../../login/income-tax.png';
-import taxMatrixImg from '../../login/Tax-matrix.png';
-import socialSecurityImg from '../../login/Social-security.png';
-import retirementSavingsImg from '../../login/Retirement-savings.png';
+
+import incomeTaxImg from '../../images/income-tax.png';
+import taxMatrixImg from '../../images/Tax-matrix.png';
+import socialSecurityImg from '../../images/Social-security.png';
+import retirementSavingsImg from '../../images/Retirement-savings.png';
 import './AdvisorToolsHub.css';
 
 interface ToolCardProps {

@@ -1,39 +1,81 @@
-import React, { useState,useEffect } from 'react';
+import React, { useState, useEffect, useCallback } from 'react';
 import ReactQuill from 'react-quill';
 import 'react-quill/dist/quill.snow.css';
-// Import the form builder
 import './AdminContentGovernance.css';
 import { useAuth } from '../../auth/AuthContext';
-import AdminFormBuilder from '../AdminFormBuilder';
+import AdminLiabilitiesBuilder from './AdminLiabilitiesBuilder';
+import AdminInvestorBuilder from './AdminInvestorBuilder';
+import AdminAssetsBuilder from './AdminAssetsBuilder';
 
 type ContentTab = 'cepa' | 'cookies' | 'privacy-policy' | 'investor-profile' | 'assets' | 'liabilities';
 
-// --- Text Editor Component ---
 const TextEditor: React.FC<{ pageSlug: string }> = ({ pageSlug }) => {
     const { token } = useAuth();
     const [content, setContent] = useState('');
-    const [isLoading, setIsLoading] = useState(false);
+    const [isLoading, setIsLoading] = useState(true);
+    const [isSaving, setIsSaving] = useState(false);
+    const [message, setMessage] = useState('');
 
-    useEffect(() => {
-        // Fetch content logic here...
+    const fetchContent = useCallback(async () => {
+        if (!token || !pageSlug) return;
+        setIsLoading(true);
+        try {
+            const response = await fetch(`http://localhost:5000/api/admin/content/${pageSlug}`, {
+                headers: { 'Authorization': `Bearer ${token}` }
+            });
+            if (!response.ok) throw new Error("Failed to fetch content.");
+            const data = await response.json();
+            setContent(data.content_html || '');
+        } catch (error) {
+            setMessage("Error loading content.");
+        } finally {
+            setIsLoading(false);
+        }
     }, [pageSlug, token]);
 
+    useEffect(() => {
+        fetchContent();
+    }, [fetchContent]);
+
     const handleUpdate = async () => {
-        // Update content logic here...
+        if (!token) return;
+        setIsSaving(true);
+        setMessage('');
+        try {
+            const response = await fetch(`http://localhost:5000/api/admin/content/${pageSlug}`, {
+                method: 'PUT',
+                headers: { 'Content-Type': 'application/json', 'Authorization': `Bearer ${token}` },
+                body: JSON.stringify({ content_html: content })
+            });
+            if (!response.ok) throw new Error("Failed to save content.");
+            setMessage("Content updated successfully!");
+            setTimeout(() => setMessage(''), 3000); 
+        } catch (error) {
+            setMessage("Error saving content.");
+        } finally {
+            setIsSaving(false);
+        }
     };
 
     return (
         <div className="editor-container">
-            {isLoading ? <p>Loading...</p> : <ReactQuill theme="snow" value={content} onChange={setContent} />}
+            {isLoading ? (
+                <p>Loading content...</p>
+            ) : (
+                <ReactQuill theme="snow" value={content} onChange={setContent} />
+            )}
             <div className="editor-actions">
-                <button className="update-button" onClick={handleUpdate}>Update</button>
+                {message && <span className="save-message">{message}</span>}
+                <button className="update-button" onClick={handleUpdate} disabled={isSaving}>
+                    {isSaving ? 'Saving...' : 'Update Content'}
+                </button>
             </div>
         </div>
     );
 };
 
 
-// --- Main Governance Page Component ---
+
 const AdminContentGovernance: React.FC = () => {
     const [activeTab, setActiveTab] = useState<ContentTab>('cepa');
 
@@ -43,12 +85,16 @@ const AdminContentGovernance: React.FC = () => {
             case 'cookies':
             case 'privacy-policy':
                 return <TextEditor pageSlug={activeTab} />;
+            
             case 'investor-profile':
-                return <AdminFormBuilder formName="investor_profile" title="Investor Profile Questions" />;
+                return <AdminInvestorBuilder formName="investor_profile" />;
+
             case 'assets':
-                return <AdminFormBuilder formName="assets" title="Asset Form Fields" />;
+                return <AdminAssetsBuilder />;
+                
             case 'liabilities':
-                return <AdminFormBuilder formName="liabilities" title="Liability Form Fields" />;
+                return <AdminLiabilitiesBuilder formName="liabilities" />;
+                
             default:
                 return null;
         }
@@ -56,9 +102,7 @@ const AdminContentGovernance: React.FC = () => {
 
     return (
         <div className="admin-page">
-            <header className="page-header">
-                <h2>Settings: Content Governance</h2>
-            </header>
+            <header className="page-header"></header>
             <div className="content-gov-container">
                 <div className="content-tabs">
                     <button onClick={() => setActiveTab('cepa')} className={activeTab === 'cepa' ? 'active' : ''}>CEPA</button>

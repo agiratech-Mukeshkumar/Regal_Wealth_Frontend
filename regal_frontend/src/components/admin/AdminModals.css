@@ -1,0 +1,128 @@
+
+.modal-overlay {
+    position: fixed;
+    inset: 0;
+    background-color: rgba(0, 0, 0, 0.6);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    z-index: 1000;
+}
+
+.modal-content {
+    background-color: white;
+    padding: 2rem;
+    border-radius: 0.75rem;
+    width: 90%;
+    max-width: 500px;
+    box-shadow: 0 10px 25px -5px rgba(0,0,0,0.1);
+}
+.modal-header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin-bottom: 1.5rem;
+}
+.modal-header h3 {
+    font-size: 1.25rem;
+    font-weight: 600;
+    margin: 0;
+}
+.close-button {
+    background: none;
+    border: none;
+    font-size: 1.75rem;
+    cursor: pointer;
+    color: #9ca3af;
+}
+
+
+.modal-search-input {
+    width: 100%;
+    padding: 0.75rem;
+    border: 1px solid #d1d5db;
+    border-radius: 0.5rem;
+    margin-bottom: 1rem;
+    box-sizing: border-box;
+}
+.advisor-list {
+    max-height: 250px;
+    overflow-y: auto;
+    border: 1px solid #e5e7eb;
+    border-radius: 0.5rem;
+}
+.advisor-list-item {
+    display: block;
+    padding: 0.75rem 1rem;
+    border-bottom: 1px solid #f3f4f6;
+    cursor: pointer;
+}
+.advisor-list-item:last-child {
+    border-bottom: none;
+}
+.advisor-list-item:hover {
+    background-color: #f9fafb;
+}
+.advisor-list-item input {
+    margin-right: 0.75rem;
+}
+
+
+.confirmation-modal {
+    text-align: center;
+    max-width: 400px;
+}
+.confirmation-modal h3 {
+    margin-top: 1rem;
+    margin-bottom: 0.5rem;
+}
+.confirmation-modal p {
+    color: #6b7280;
+    margin-bottom: 2rem;
+}
+.confirmation-icon {
+    width: 60px;
+    height: 60px;
+    border-radius: 50%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    margin: 0 auto 1rem auto;
+    font-size: 2rem;
+    font-weight: bold;
+}
+.confirmation-icon.icon-red {
+    background-color: #fee2e2;
+    color: #ef4444;
+}
+
+.modal-actions {
+    margin-top: 1.5rem;
+    display: flex;
+    justify-content: flex-end;
+    gap: 0.75rem;
+}
+.modal-button {
+    padding: 0.75rem 1.5rem;
+    border-radius: 0.5rem;
+    border: 1px solid transparent;
+    font-weight: 600;
+    cursor: pointer;
+}
+.modal-button.cancel {
+    background-color: #fff;
+    color: #374151;
+    border-color: #d1d5db;
+}
+.modal-button.submit {
+    background-color: #1e1b5b;
+    color: white;
+}
+.modal-button.confirm-red {
+    background-color: #ef4444;
+    color: white;
+}
+.modal-button:disabled {
+    opacity: 0.6;
+    cursor: not-allowed;
+}
