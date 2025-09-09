@@ -2,6 +2,8 @@ import React, { useState, useEffect, useCallback } from 'react';
 import { useAuth } from '../../auth/AuthContext';
 import './AdminInvestorBuilder.css';
 
+const apiUrl = process.env.REACT_APP_API_URL;
+
 
 interface FormOption {
     id: number;
@@ -30,7 +32,7 @@ const AdminInvestorBuilder: React.FC<AdminInvestorBuilderProps> = ({ formName })
     const fetchFormStructure = useCallback(async () => {
         setIsLoading(true);
         try {
-            const response = await fetch(`http://localhost:5000/api/admin/forms/${formName}`, {
+            const response = await fetch(`${apiUrl}/api/admin/forms/${formName}`, {
                 headers: { 'Authorization': `Bearer ${token}` }
             });
             if (!response.ok) throw new Error(`Failed to fetch form: ${response.statusText}`);
@@ -49,7 +51,7 @@ const AdminInvestorBuilder: React.FC<AdminInvestorBuilderProps> = ({ formName })
     
     const handleUpdateField = async (fieldId: number, updateData: Partial<FormField>) => {
         try {
-            await fetch(`http://localhost:5000/api/admin/forms/fields/${fieldId}`, {
+            await fetch(`${apiUrl}/api/admin/forms/fields/${fieldId}`, {
                 method: 'PUT',
                 headers: { 'Content-Type': 'application/json', 'Authorization': `Bearer ${token}` },
                 body: JSON.stringify(updateData),
@@ -63,7 +65,7 @@ const AdminInvestorBuilder: React.FC<AdminInvestorBuilderProps> = ({ formName })
     
     const handleUpdateOption = async (optionId: number, updateData: Partial<FormOption>) => {
         try {
-            await fetch(`http://localhost:5000/api/admin/forms/options/${optionId}`, {
+            await fetch(`${apiUrl}/api/admin/forms/options/${optionId}`, {
                 method: 'PUT',
                 headers: { 'Content-Type': 'application/json', 'Authorization': `Bearer ${token}` },
                 body: JSON.stringify(updateData),
@@ -75,7 +77,7 @@ const AdminInvestorBuilder: React.FC<AdminInvestorBuilderProps> = ({ formName })
     
     const handleAddOption = async (fieldId: number) => {
         try {
-            await fetch(`http://localhost:5000/api/admin/forms/fields/${fieldId}/options`, {
+            await fetch(`${apiUrl}/api/admin/forms/fields/${fieldId}/options`, {
                 method: 'POST',
                 headers: {
                     'Authorization': `Bearer ${token}`,
@@ -92,7 +94,7 @@ const AdminInvestorBuilder: React.FC<AdminInvestorBuilderProps> = ({ formName })
     const handleDeleteOption = async (optionId: number) => {
         if (!window.confirm("Are you sure you want to delete this option?")) return;
         try {
-            await fetch(`http://localhost:5000/api/admin/forms/options/${optionId}`, {
+            await fetch(`${apiUrl}/api/admin/forms/options/${optionId}`, {
                 method: 'DELETE',
                 headers: { 'Authorization': `Bearer ${token}` }
             });
@@ -104,7 +106,7 @@ const AdminInvestorBuilder: React.FC<AdminInvestorBuilderProps> = ({ formName })
 
     const handleAddField = async () => {
         try {
-            await fetch(`http://localhost:5000/api/admin/forms/${formName}/fields`, {
+            await fetch(`${apiUrl}/api/admin/forms/${formName}/fields`, {
                 method: 'POST',
                 headers: { 'Content-Type': 'application/json', 'Authorization': `Bearer ${token}` },
                 body: JSON.stringify({ field_label: 'New Question', field_type: 'Checkbox' }),

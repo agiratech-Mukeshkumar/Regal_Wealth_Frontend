@@ -6,7 +6,7 @@ const PlusIcon = () => <svg xmlns="http://www.w3.org/2000/svg" width="20" height
 const MoreVerticalIcon = () => <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"><circle cx="12" cy="12" r="1"></circle><circle cx="12" cy="5" r="1"></circle><circle cx="12" cy="19" r="1"></circle></svg>;
 const GrabHandleIcon = () => <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="#9ca3af" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"><circle cx="12" cy="12" r="1"></circle><circle cx="12" cy="5" r="1"></circle><circle cx="12" cy="19" r="1"></circle><circle cx="5" cy="12" r="1"></circle><circle cx="19" cy="12" r="1"></circle></svg>;
 
-
+const apiUrl = process.env.REACT_APP_API_URL;
 
 interface FormOption {
     id: number;
@@ -60,7 +60,7 @@ const AdminLiabilitiesBuilder: React.FC<AdminFormBuilderProps> = ({ formName }) 
     const fetchFormStructure = useCallback(async () => {
         setIsLoading(true);
         try {
-            const response = await fetch(`http://localhost:5000/api/admin/forms/${formName}`, {
+            const response = await fetch(`${apiUrl}/api/admin/forms/${formName}`, {
                 headers: { 'Authorization': `Bearer ${token}` }
             });
             if (!response.ok) throw new Error(`Failed to fetch form: ${response.statusText}`);
@@ -79,7 +79,7 @@ const AdminLiabilitiesBuilder: React.FC<AdminFormBuilderProps> = ({ formName }) 
 
     const handleUpdateField = async (fieldId: number, updateData: Partial<FormField>) => {
         try {
-            const response = await fetch(`http://localhost:5000/api/admin/forms/fields/${fieldId}`, {
+            const response = await fetch(`${apiUrl}/api/admin/forms/fields/${fieldId}`, {
                 method: 'PUT',
                 headers: { 'Content-Type': 'application/json', 'Authorization': `Bearer ${token}` },
                 body: JSON.stringify(updateData),
@@ -95,7 +95,7 @@ const AdminLiabilitiesBuilder: React.FC<AdminFormBuilderProps> = ({ formName }) 
     const handleDeleteField = async (fieldId: number) => {
         if (!window.confirm("Are you sure you want to delete this question and all its sub-questions?")) return;
         try {
-            const response = await fetch(`http://localhost:5000/api/admin/forms/fields/${fieldId}`, {
+            const response = await fetch(`${apiUrl}/api/admin/forms/fields/${fieldId}`, {
                 method: 'DELETE',
                 headers: { 'Authorization': `Bearer ${token}` },
             });
@@ -108,7 +108,7 @@ const AdminLiabilitiesBuilder: React.FC<AdminFormBuilderProps> = ({ formName }) 
     
     const handleAddField = async (label: string, type: FormField['field_type'], parentId: number | null = null) => {
         try {
-            const response = await fetch(`http://localhost:5000/api/admin/forms/${formName}/fields`, {
+            const response = await fetch(`${apiUrl}/api/admin/forms/${formName}/fields`, {
                 method: 'POST',
                 headers: { 'Content-Type': 'application/json', 'Authorization': `Bearer ${token}` },
                 body: JSON.stringify({ field_label: label, field_type: type, parent_field_id: parentId }),

@@ -2,7 +2,7 @@ import React, { useState } from 'react';
 import './FactFinder.css'; 
 import { useNavigate } from 'react-router-dom';
 
-
+const apiUrl = process.env.REACT_APP_API_URL;
 interface IncomeSource { source: string; owner: 'Client' | 'Spouse'; monthly_amount: string; }
 interface Asset { asset_type: string; description: string; owner: string; balance: string; }
 interface Liability { liability_type: string; description: string; balance: string; }
@@ -40,9 +40,9 @@ const FactFinderFinancials: React.FC = () => {
             
             
             const responses = await Promise.all([
-                fetch('http://localhost:5000/api/client/profile/income', { method: 'POST', headers, body: JSON.stringify({ income_sources: incomeSources }) }),
-                fetch('http://localhost:5000/api/client/profile/assets', { method: 'POST', headers, body: JSON.stringify({ assets }) }),
-                fetch('http://localhost:5000/api/client/profile/liabilities', { method: 'POST', headers, body: JSON.stringify({ liabilities }) })
+                fetch(`${apiUrl}/api/client/profile/income`, { method: 'POST', headers, body: JSON.stringify({ income_sources: incomeSources }) }),
+                fetch(`${apiUrl}/api/client/profile/assets`, { method: 'POST', headers, body: JSON.stringify({ assets }) }),
+                fetch(`${apiUrl}/api/client/profile/liabilities`, { method: 'POST', headers, body: JSON.stringify({ liabilities }) })
             ]);
 
             

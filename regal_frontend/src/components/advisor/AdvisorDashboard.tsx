@@ -3,6 +3,8 @@ import { PieChart, Pie, Cell, ResponsiveContainer, Tooltip, Legend, BarChart, Ba
 import { useAuth } from '../../auth/AuthContext';
 import './AdvisorDashboard.css';
 
+const apiUrl = process.env.REACT_APP_API_URL;
+
 interface DashboardData {
   meetings_today: number;
   appointments_weekly: { day: string, count: number }[];
@@ -30,7 +32,7 @@ const AdvisorDashboard: React.FC = () => {
             if (!token) return;
             setIsLoading(true);
             try {
-                const response = await fetch('http://localhost:5000/api/advisor/dashboard/stats', {
+                const response = await fetch(`${apiUrl}/api/advisor/dashboard/stats`, {
                     headers: { 'Authorization': `Bearer ${token}` }
                 });
                 

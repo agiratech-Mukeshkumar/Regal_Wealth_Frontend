@@ -4,6 +4,7 @@ import './AdminAdvisorManagement.css';
 import StatusConfirmationModal, { ItemWithStatus } from '../advisor/StatusConfirmationModal';
 import DeleteConfirmationModal from './DeleteConfirmationModal';
 
+const apiUrl = process.env.REACT_APP_API_URL;
 
 interface Advisor {
     id: number;
@@ -37,7 +38,7 @@ const AddAdvisorModal: React.FC<AddAdvisorModalProps> = ({ isOpen, onClose, onSu
         setIsSubmitting(true);
 
         try {
-            const response = await fetch('http://localhost:5000/api/admin/advisors', {
+            const response = await fetch(`${apiUrl}/api/admin/advisors`, {
                 method: 'POST',
                 headers: { 'Content-Type': 'application/json', 'Authorization': `Bearer ${token}` },
                 body: JSON.stringify({ first_name: firstName, last_name: lastName, email: email })
@@ -124,7 +125,7 @@ const AdminAdvisorManagement: React.FC = () => {
         setIsLoading(true);
         setError('');
         try {
-            const response = await fetch('http://localhost:5000/api/admin/advisors', {
+            const response = await fetch(`${apiUrl}/api/admin/advisors`, {
                 headers: { 'Authorization': `Bearer ${token}` }
             });
             if (!response.ok) throw new Error('Failed to fetch advisors.');
@@ -167,7 +168,7 @@ const AdminAdvisorManagement: React.FC = () => {
         if (!advisor) return;
         setIsSubmitting(true);
         try {
-            await fetch(`http://localhost:5000/api/admin/users/${advisor.id}`, {
+            await fetch(`${apiUrl}/api/admin/users/${advisor.id}`, {
                 method: 'PUT',
                 headers: { 'Content-Type': 'application/json', 'Authorization': `Bearer ${token}` },
                 body: JSON.stringify({ is_active: !advisor.is_active })
@@ -184,8 +185,10 @@ const AdminAdvisorManagement: React.FC = () => {
     const handleDelete = async () => {
         if (!selectedAdvisor) return;
         setIsSubmitting(true);
+        
+
         try {
-            const response = await fetch(`http://localhost:5000/api/admin/users/${selectedAdvisor.id}`, {
+            const response = await fetch(`${apiUrl}/api/admin/users/${selectedAdvisor.id}`, {
                 method: 'DELETE',
                 headers: { 'Authorization': `Bearer ${token}` }
             });

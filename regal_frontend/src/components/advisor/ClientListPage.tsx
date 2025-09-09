@@ -10,6 +10,9 @@ import './AddClientModal.css';
 import StatusConfirmationModal, { ItemWithStatus } from './StatusConfirmationModal';
 import OnboardingConfirmationModal from './OnboardingConfirmation';
 
+
+const apiUrl = process.env.REACT_APP_API_URL;
+
 interface Client {
     id: number;
     first_name: string;
@@ -163,9 +166,9 @@ const ClientListPage: React.FC = () => {
         setIsLoading(true);
         try {
             const [clientsRes, statsRes, nextAppointmentRes] = await Promise.all([
-                fetch('http://localhost:5000/api/advisor/clients', { headers: { 'Authorization': `Bearer ${token}` } }),
-                fetch('http://localhost:5000/api/advisor/dashboard/stats', { headers: { 'Authorization': `Bearer ${token}` } }),
-                fetch('http://localhost:5000/api/advisor/dashboard/next-appointment', { headers: { 'Authorization': `Bearer ${token}` } })
+                fetch(`${apiUrl}/api/advisor/clients`, { headers: { 'Authorization': `Bearer ${token}` } }),
+                fetch(`${apiUrl}/api/advisor/dashboard/stats`, { headers: { 'Authorization': `Bearer ${token}` } }),
+                fetch(`${apiUrl}/api/advisor/dashboard/next-appointment`, { headers: { 'Authorization': `Bearer ${token}` } })
             ]);
             if (!clientsRes.ok || !statsRes.ok || !nextAppointmentRes.ok) throw new Error('Failed to fetch page data.');
             const clientsData = await clientsRes.json();
@@ -207,7 +210,7 @@ const ClientListPage: React.FC = () => {
         setStats(prevStats => ({ ...prevStats, clients_by_tier: newClientsByTier }));
 
         try {
-            await fetch(`http://localhost:5000/api/advisor/clients/${clientId}`, {
+            await fetch(`${apiUrl}/api/advisor/clients/${clientId}`, {
                 method: 'PUT',
                 headers: { 'Content-Type': 'application/json', 'Authorization': `Bearer ${token}` },
                 body: JSON.stringify(updateData)
@@ -227,7 +230,7 @@ const ClientListPage: React.FC = () => {
         if (!client) return;
         setIsSubmitting(true);
         try {
-            const response = await fetch(`http://localhost:5000/api/advisor/clients/${client.id}`, {
+            const response = await fetch(`${apiUrl}/api/advisor/clients/${client.id}`, {
                 method: 'PUT',
                 headers: { 'Content-Type': 'application/json', 'Authorization': `Bearer ${token}` },
                 body: JSON.stringify({ is_active: !client.is_active })
@@ -247,7 +250,7 @@ const ClientListPage: React.FC = () => {
         if (!client) return;
         setIsSubmitting(true);
         try {
-            const response = await fetch(`http://localhost:5000/api/advisor/clients/${client.id}`, {
+            const response = await fetch(`${apiUrl}/api/advisor/clients/${client.id}`, {
                 method: 'PUT',
                 headers: { 'Content-Type': 'application/json', 'Authorization': `Bearer ${token}` },
                 body: JSON.stringify({ onboarding_status: 'Completed' })

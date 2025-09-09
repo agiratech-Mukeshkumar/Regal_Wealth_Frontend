@@ -4,6 +4,7 @@ import { PieChart, Pie, Cell, ResponsiveContainer } from 'recharts';
 import InfoModal from './InfoModal';
 import './AdvisorIncomeTaxTool.css';
 
+const apiUrl = process.env.REACT_APP_API_URL;
 
 interface TaxResults {
     gross_income: number;
@@ -108,7 +109,7 @@ const AdvisorIncomeTaxTool: React.FC = () => {
         };
 
         try {
-            const response = await fetch('http://localhost:5000/api/advisor/tools/income-tax', {
+            const response = await fetch(`${apiUrl}/api/advisor/tools/income-tax`, {
                 method: 'POST',
                 headers: {
                     'Content-Type': 'application/json',

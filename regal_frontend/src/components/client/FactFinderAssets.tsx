@@ -3,6 +3,7 @@ import { useAuth } from '../../auth/AuthContext';
 import { useNavigate } from 'react-router-dom';
 import './FactFinder.css';
 
+const apiUrl = process.env.REACT_APP_API_URL;
 
 interface SubField { id: number; label: string; type: 'Textbox' | 'Select' | 'Currency'; }
 interface AssetCategory { id: number; label: string; description: string; subFields: SubField[]; }
@@ -26,8 +27,8 @@ const FactFinderAssets: React.FC = () => {
         setIsFetching(true);
         try {
             const [schemaRes, dataRes] = await Promise.all([
-                fetch('http://localhost:5000/api/client/forms/assets', { headers: { 'Authorization': `Bearer ${token}` } }),
-                fetch('http://localhost:5000/api/client/profile/assets', { headers: { 'Authorization': `Bearer ${token}` } })
+                fetch(`${apiUrl}/api/client/forms/assets`, { headers: { 'Authorization': `Bearer ${token}` } }),
+                fetch(`${apiUrl}/api/client/profile/assets`, { headers: { 'Authorization': `Bearer ${token}` } })
             ]);
 
             if (!schemaRes.ok) throw new Error("Failed to load form structure.");
@@ -167,7 +168,7 @@ const FactFinderAssets: React.FC = () => {
         }
 
         try {
-            await fetch('http://localhost:5000/api/client/profile/assets', {
+            await fetch(`${apiUrl}/api/client/profile/assets`, {
                 method: 'POST',
                 headers: { 'Content-Type': 'application/json', 'Authorization': `Bearer ${token}` },
                 body: JSON.stringify({ assets: assetsPayload })

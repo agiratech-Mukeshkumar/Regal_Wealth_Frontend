@@ -4,6 +4,7 @@ import { useAuth } from '../../auth/AuthContext';
 import AppointmentModal from './AppointmentModal';
 import './ClientDetailPage.css';
 
+const apiUrl = process.env.REACT_APP_API_URL;
 
 interface AdvisorAppointment {
     start_time: string;
@@ -92,7 +93,7 @@ const ClientDetailPage: React.FC = () => {
         if (!token || !clientId) return;
         setIsLoading(true);
         try {
-            const response = await fetch(`http://localhost:5000/api/advisor/clients/${clientId}`, {
+            const response = await fetch(`${apiUrl}/api/advisor/clients/${clientId}`, {
                 headers: { 'Authorization': `Bearer ${token}` }
             });
             if (!response.ok) throw new Error('Failed to fetch client details.');
@@ -110,7 +111,7 @@ const ClientDetailPage: React.FC = () => {
         const fetchAdvisorSchedule = async () => {
             if (!token) return;
             try {
-                const response = await fetch('http://localhost:5000/api/advisor/appointments', {
+                const response = await fetch('${apiUrl}/api/advisor/appointments', {
                     headers: { 'Authorization': `Bearer ${token}` }
                 });
                 if (response.ok) {
@@ -144,7 +145,7 @@ const ClientDetailPage: React.FC = () => {
     }, [client]);
 
     const handleViewDocument = (docId: number) => {
-        const url = `http://localhost:5000/api/advisor/clients/${clientId}/documents/${docId}?token=${token}`;
+        const url = `${apiUrl}/api/advisor/clients/${clientId}/documents/${docId}?token=${token}`;
         setViewingPdfUrl(url);
     };
 

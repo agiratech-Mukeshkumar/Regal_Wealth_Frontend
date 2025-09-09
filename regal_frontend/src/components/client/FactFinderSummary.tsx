@@ -3,6 +3,7 @@ import { useAuth } from '../../auth/AuthContext';
 import { useNavigate } from 'react-router-dom';
 import './FactFinder.css';
 
+const apiUrl = process.env.REACT_APP_API_URL;
 // --- Interface Definitions ---
 interface PersonalInfo {
     first_name: string;
@@ -76,7 +77,7 @@ const FactFinderSummary: React.FC = () => {
         const fetchProfile = async () => {
             if (!token) return;
             try {
-                const response = await fetch('http://localhost:5000/api/client/profile', {
+                const response = await fetch(`${apiUrl}/api/client/profile`, {
                     headers: { 'Authorization': `Bearer ${token}` }
                 });
                 if (!response.ok) throw new Error('Failed to load summary data.');
@@ -95,7 +96,7 @@ const FactFinderSummary: React.FC = () => {
         setIsSubmitting(true);
         setError('');
         try {
-            const response = await fetch('http://localhost:5000/api/client/profile/submit', {
+            const response = await fetch(`${apiUrl}/api/client/profile/submit`, {
                 method: 'POST',
                 headers: { 'Authorization': `Bearer ${token}` }
             });

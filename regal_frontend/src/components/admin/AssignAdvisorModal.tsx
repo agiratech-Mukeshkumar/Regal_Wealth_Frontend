@@ -2,6 +2,8 @@ import React, { useState, useEffect, useMemo } from 'react';
 import { useAuth } from '../../auth/AuthContext';
 import './AdminModals.css'; 
 
+const apiUrl = process.env.REACT_APP_API_URL;
+
 interface Advisor {
     id: number;
     first_name: string;
@@ -26,7 +28,7 @@ const AssignAdvisorModal: React.FC<AssignModalProps> = ({ isOpen, onClose, onAss
             const fetchAdvisors = async () => {
                 setIsLoading(true);
                 try {
-                    const response = await fetch('http://localhost:5000/api/admin/advisors', {
+                    const response = await fetch(`${apiUrl}/api/admin/advisors`, {
                         headers: { 'Authorization': `Bearer ${token}` }
                     });
                     if (!response.ok) throw new Error('Failed to fetch advisors.');

@@ -2,6 +2,7 @@ import React, { useState, useEffect } from 'react';
 import { useAuth } from '../../auth/AuthContext';
 import './ClientSettingPage.css';
 
+const apiUrl = process.env.REACT_APP_API_URL;
 
 type SecurityPayload = {
     current_password?: string;
@@ -53,7 +54,7 @@ const ClientSettingsPage: React.FC = () => {
         setError('');
         try {
             
-            const response = await fetch('http://localhost:5000/api/client/settings/security', {
+            const response = await fetch(`${apiUrl}/api/client/settings/security`, {
                 method: 'PUT',
                 headers: { 'Content-Type': 'application/json', 'Authorization': `Bearer ${token}` },
                 body: JSON.stringify(payload)

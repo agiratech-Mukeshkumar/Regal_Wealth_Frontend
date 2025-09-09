@@ -10,6 +10,8 @@ interface Notification {
     created_at: string;
 }
 
+const apiUrl = process.env.REACT_APP_API_URL;
+
 const NotificationsPage: React.FC = () => {
     const { token } = useAuth();
     const [unreadNotifications, setUnreadNotifications] = useState<Notification[]>([]);
@@ -20,7 +22,7 @@ const NotificationsPage: React.FC = () => {
         if (!token) return;
         setIsLoading(true);
         try {
-            const response = await fetch('http://localhost:5000/api/notifications', {
+            const response = await fetch(`${apiUrl}/api/notifications`, {
                 headers: { 'Authorization': `Bearer ${token}` }
             });
             const data = await response.json();
@@ -45,7 +47,7 @@ const NotificationsPage: React.FC = () => {
         setReadNotifications(prev => [notificationToMark, ...prev]);
 
         try {
-            await fetch(`http://localhost:5000/api/notifications/${notificationToMark.id}/read`, {
+            await fetch(`${apiUrl}/api/notifications/${notificationToMark.id}/read`, {
                 method: 'PUT',
                 headers: { 'Authorization': `Bearer ${token}` }
             });

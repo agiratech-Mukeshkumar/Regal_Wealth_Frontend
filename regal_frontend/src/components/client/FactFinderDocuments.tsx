@@ -3,6 +3,9 @@ import { useNavigate } from 'react-router-dom';
 import { useAuth } from '../../auth/AuthContext';
 import './FactFinderDocuments.css';
 
+
+const apiUrl = process.env.REACT_APP_API_URL;
+
 interface Document {
     id: number;
     document_name: string;
@@ -94,7 +97,7 @@ const FactFinderDocuments: React.FC = () => {
             if (!token) return;
             setIsFetching(true);
             try {
-                const response = await fetch('http://localhost:5000/api/client/documents', {
+                const response = await fetch(`${apiUrl}/api/client/documents`, {
                     headers: { 'Authorization': `Bearer ${token}` }
                 });
                 if (!response.ok) throw new Error('Failed to fetch documents.');
@@ -141,7 +144,7 @@ const FactFinderDocuments: React.FC = () => {
     };
 
     const handleViewDocument = (docId: number) => {
-        const url = `http://localhost:5000/api/client/documents/${docId}?token=${token}`;
+        const url = `${apiUrl}/api/client/documents/${docId}?token=${token}`;
         setActivePdfUrl(url);
         setIsPdfViewerOpen(true);
     };
@@ -149,7 +152,7 @@ const FactFinderDocuments: React.FC = () => {
     const handleDeleteDocument = async (docId: number) => {
         if (!window.confirm("Are you sure you want to delete this document?")) return;
         try {
-            const response = await fetch(`http://localhost:5000/api/client/documents/${docId}`, {
+            const response = await fetch(`${apiUrl}/api/client/documents/${docId}`, {
                 method: 'DELETE',
                 headers: { 'Authorization': `Bearer ${token}` }
             });
@@ -174,7 +177,7 @@ const FactFinderDocuments: React.FC = () => {
 
             setUploadQueue(prev => prev.map(q => q.id === item.id ? { ...q, progress: 100 } : q));
 
-            return fetch('http://localhost:5000/api/client/documents/upload', {
+            return fetch(`${apiUrl}api/client/documents/upload`, {
                 method: 'POST',
                 headers: { 'Authorization': `Bearer ${token}` },
                 body: formData

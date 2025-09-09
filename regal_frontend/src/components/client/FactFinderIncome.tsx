@@ -3,7 +3,7 @@ import { useAuth } from '../../auth/AuthContext';
 import { useNavigate } from 'react-router-dom';
 import './FactFinder.css';
 
-
+const apiUrl = process.env.REACT_APP_API_URL;
 interface OtherIncome {
     source: string;
     income: string;
@@ -48,7 +48,7 @@ const FactFinderIncome: React.FC = () => {
             
             setIsFetching(true);
             try {
-                const response = await fetch('http://localhost:5000/api/client/profile/income', {
+                const response = await fetch(`${apiUrl}/api/client/profile/income`, {
                     headers: { 'Authorization': `Bearer ${token}` }
                 });
 
@@ -149,7 +149,7 @@ const FactFinderIncome: React.FC = () => {
         });
 
         try {
-            const response = await fetch('http://localhost:5000/api/client/profile/income', {
+            const response = await fetch(`${apiUrl}/api/client/profile/income`, {
                 method: 'POST',
                 headers: { 'Content-Type': 'application/json', 'Authorization': `Bearer ${token}` },
                 body: JSON.stringify({ income_sources })

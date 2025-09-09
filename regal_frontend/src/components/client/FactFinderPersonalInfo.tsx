@@ -3,6 +3,9 @@ import { useAuth } from '../../auth/AuthContext';
 import './FactFinder.css';
 import { useNavigate } from 'react-router-dom';
 
+
+const apiUrl = process.env.REACT_APP_API_URL;
+
 const API_BASE = "https://api.countrystatecity.in/v1";
 const API_KEY = "MXpQSXdVZ09iVHNEZ21aaUJCa29yN3B3dkRyUnF3VDV3UEROeFpjaQ=="; 
 
@@ -65,7 +68,7 @@ const FactFinderPersonalInfo: React.FC = () => {
             if (!token) return;
             setIsFetching(true);
             try {
-                const response = await fetch('http://localhost:5000/api/client/profile/personal', {
+                const response = await fetch(`${apiUrl}/api/client/profile/personal`, {
                     headers: { 'Authorization': `Bearer ${token}` }
                 });
                 if (response.status === 404) return;
@@ -211,7 +214,7 @@ const FactFinderPersonalInfo: React.FC = () => {
         setIsLoading(true);
         setMessage('');
         try {
-            const response = await fetch('http://localhost:5000/api/client/profile/personal', {
+            const response = await fetch(`${apiUrl}/api/client/profile/personal`, {
                 method: 'PUT',
                 headers: { 'Content-Type': 'application/json', 'Authorization': `Bearer ${token}` },
                 body: JSON.stringify(formData)

@@ -4,6 +4,7 @@ import './AdminClientManagement.css';
 import AssignAdvisorModal from './AssignAdvisorModal';
 import DeleteConfirmationModal from './DeleteConfirmationModal';
 
+const apiUrl = process.env.REACT_APP_API_URL;
 
 interface Client {
     id: number;
@@ -33,7 +34,7 @@ const AdminClientManagement: React.FC = () => {
         setIsLoading(true);
         setError('');
         try {
-            const response = await fetch('http://localhost:5000/api/admin/clients', {
+            const response = await fetch(`${apiUrl}/api/admin/clients`, {
                 headers: { 'Authorization': `Bearer ${token}` }
             });
             if (!response.ok) throw new Error('Failed to fetch clients.');
@@ -70,7 +71,7 @@ const AdminClientManagement: React.FC = () => {
         if (!selectedClient) return;
         setIsSubmitting(true);
         try {
-            const response = await fetch(`http://localhost:5000/api/admin/clients/${selectedClient.id}/assign`, {
+            const response = await fetch(`${apiUrl}/api/admin/clients/${selectedClient.id}/assign`, {
                 method: 'POST',
                 headers: { 'Content-Type': 'application/json', 'Authorization': `Bearer ${token}` },
                 body: JSON.stringify({ advisor_id: advisorId })
@@ -89,7 +90,7 @@ const AdminClientManagement: React.FC = () => {
         if (!selectedClient) return;
         setIsSubmitting(true);
         try {
-            const response = await fetch(`http://localhost:5000/api/admin/users/${selectedClient.id}`, {
+            const response = await fetch(`${apiUrl}/api/admin/users/${selectedClient.id}`, {
                 method: 'DELETE',
                 headers: { 'Authorization': `Bearer ${token}` }
             });

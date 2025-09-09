@@ -2,6 +2,10 @@ import React, { useState, useEffect, useMemo } from 'react';
 import { useAuth } from '../../auth/AuthContext';
 import './AppointmentModal.css';
 
+
+const apiUrl = process.env.REACT_APP_API_URL;
+
+
 interface AdvisorAppointment {
     start_time: string;
     end_time: string;
@@ -90,7 +94,7 @@ const AppointmentModal: React.FC<AppointmentModalProps> = ({ isOpen, onClose, cl
         };
 
         try {
-            const response = await fetch('http://localhost:5000/api/advisor/appointments', {
+            const response = await fetch(`${apiUrl}/api/advisor/appointments`, {
                 method: 'POST',
                 headers: { 'Content-Type': 'application/json', 'Authorization': `Bearer ${token}` },
                 body: JSON.stringify(payload)

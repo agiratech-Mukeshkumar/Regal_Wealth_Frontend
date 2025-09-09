@@ -3,7 +3,7 @@ import { useAuth } from '../../auth/AuthContext';
 import { useNavigate } from 'react-router-dom';
 import './FactFinder.css';
 
-
+const apiUrl = process.env.REACT_APP_API_URL;
 interface FormField {
     id: number;
     field_label: string;
@@ -39,10 +39,10 @@ const FactFinderLiabilities: React.FC = () => {
         setError('');
         try {
             const [formRes, dataRes] = await Promise.all([
-                fetch(`http://localhost:5000/api/client/forms/liabilities`, {
+                fetch(`${apiUrl}/api/client/forms/liabilities`, {
                     headers: { 'Authorization': `Bearer ${token}` }
                 }),
-                fetch(`http://localhost:5000/api/client/profile/liabilities`, {
+                fetch(`${apiUrl}/api/client/profile/liabilities`, {
                     headers: { 'Authorization': `Bearer ${token}` }
                 })
             ]);
@@ -111,7 +111,7 @@ const FactFinderLiabilities: React.FC = () => {
             .filter(Boolean);
 
         try {
-            const response = await fetch('http://localhost:5000/api/client/profile/liabilities', {
+            const response = await fetch(`${apiUrl}/api/client/profile/liabilities`, {
                 method: 'POST',
                 headers: { 'Content-Type': 'application/json', 'Authorization': `Bearer ${token}` },
                 body: JSON.stringify({ liabilities: liabilitiesPayload })

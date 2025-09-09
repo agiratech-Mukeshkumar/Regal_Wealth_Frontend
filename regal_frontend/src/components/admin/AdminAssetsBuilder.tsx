@@ -2,6 +2,7 @@ import React, { useState, useEffect, useCallback } from 'react';
 import { useAuth } from '../../auth/AuthContext';
 import './AdminAssetsBuilder.css';
 
+const apiUrl = process.env.REACT_APP_API_URL;
 
 const PlusIcon = () => <svg xmlns="http://www.w.org/2000/svg" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"><line x1="12" y1="5" x2="12" y2="19"></line><line x1="5" y1="12" x2="19" y2="12"></line></svg>;
 const TrashIcon = () => <svg xmlns="http://www.w3.org/2000/svg" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"><polyline points="3 6 5 6 21 6"></polyline><path d="M19 6v14a2 2 0 0 1-2 2H7a2 2 0 0 1-2-2V6m3 0V4a2 2 0 0 1 2-2h4a2 2 0 0 1 2 2v2"></path></svg>;
@@ -27,7 +28,7 @@ const AdminAssetsBuilder: React.FC = () => {
         setIsLoading(true);
         if (!token) return;
         try {
-            const response = await fetch('http://localhost:5000/api/admin/forms/assets', {
+            const response = await fetch(`${apiUrl}/api/admin/forms/assets`, {
                 headers: { 'Authorization': `Bearer ${token}` }
             });
             if (!response.ok) throw new Error("Failed to fetch asset schema.");
@@ -45,7 +46,7 @@ const AdminAssetsBuilder: React.FC = () => {
     }, [fetchAssetSchema]);
 
     const handleAddCategory = async () => {
-        await fetch('http://localhost:5000/api/admin/forms/assets/categories', {
+        await fetch(`${apiUrl}/api/admin/forms/assets/categories`, {
             method: 'POST',
             headers: { 'Authorization': `Bearer ${token}`, 'Content-Type': 'application/json' },
             body: JSON.stringify({})
@@ -54,7 +55,7 @@ const AdminAssetsBuilder: React.FC = () => {
     };
 
     const handleUpdateCategory = async (catId: number, label: string, description: string) => {
-        await fetch(`http://localhost:5000/api/admin/forms/assets/categories/${catId}`, {
+        await fetch(`${apiUrl}/api/admin/forms/assets/categories/${catId}`, {
             method: 'PUT',
             headers: { 'Authorization': `Bearer ${token}`, 'Content-Type': 'application/json' },
             body: JSON.stringify({ label, description })
@@ -63,7 +64,7 @@ const AdminAssetsBuilder: React.FC = () => {
 
     const handleDeleteCategory = async (catId: number) => {
         if (!window.confirm("Delete this entire category and all its fields?")) return;
-        await fetch(`http://localhost:5000/api/admin/forms/assets/categories/${catId}`, {
+        await fetch(`${apiUrl}/api/admin/forms/assets/categories/${catId}`, {
             method: 'DELETE',
             headers: { 'Authorization': `Bearer ${token}` }
         });
@@ -71,7 +72,7 @@ const AdminAssetsBuilder: React.FC = () => {
     };
 
     const handleAddSubField = async (catId: number) => {
-        await fetch(`http://localhost:5000/api/admin/forms/assets/categories/${catId}/fields`, {
+        await fetch(`${apiUrl}/api/admin/forms/assets/categories/${catId}/fields`, {
             method: 'POST',
             headers: { 'Authorization': `Bearer ${token}`, 'Content-Type': 'application/json' },
             body: JSON.stringify({})
@@ -80,7 +81,7 @@ const AdminAssetsBuilder: React.FC = () => {
     };
     
     const handleUpdateSubField = async (fieldId: number, updatedField: Partial<SubField>) => {
-        await fetch(`http://localhost:5000/api/admin/forms/fields/${fieldId}`, {
+        await fetch(`${apiUrl}/api/admin/forms/fields/${fieldId}`, {
             method: 'PUT',
             headers: { 'Authorization': `Bearer ${token}`, 'Content-Type': 'application/json' },
             body: JSON.stringify(updatedField)
@@ -88,7 +89,7 @@ const AdminAssetsBuilder: React.FC = () => {
     };
 
     const handleDeleteSubField = async (fieldId: number) => {
-        await fetch(`http://localhost:5000/api/admin/forms/fields/${fieldId}`, {
+        await fetch(`${apiUrl}/api/admin/forms/fields/${fieldId}`, {
             method: 'DELETE',
             headers: { 'Authorization': `Bearer ${token}` }
         });

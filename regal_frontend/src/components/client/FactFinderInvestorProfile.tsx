@@ -3,6 +3,7 @@ import { useAuth } from '../../auth/AuthContext';
 import { useNavigate } from 'react-router-dom';
 import './FactFinder.css';
 
+const apiUrl = process.env.REACT_APP_API_URL;
 interface FormOption {
     id: number;
     option_label: string;
@@ -33,10 +34,10 @@ const FactFinderInvestorProfile: React.FC = () => {
         setIsLoading(true);
         try {
             const [formRes, answersRes] = await Promise.all([
-                fetch('http://localhost:5000/api/client/forms/investor-profile', {
+                fetch(`${apiUrl}/api/client/forms/investor-profile`, {
                     headers: { 'Authorization': `Bearer ${token}` }
                 }),
-                fetch('http://localhost:5000/api/client/profile/questionnaire', {
+                fetch(`${apiUrl}/api/client/profile/questionnaire`, {
                     headers: { 'Authorization': `Bearer ${token}` }
                 })
             ]);
@@ -103,7 +104,7 @@ const FactFinderInvestorProfile: React.FC = () => {
         }));
 
         try {
-            const response = await fetch('http://localhost:5000/api/client/profile/questionnaire', {
+            const response = await fetch(`${apiUrl}/api/client/profile/questionnaire`, {
                 method: 'PUT',
                 headers: { 'Content-Type': 'application/json', 'Authorization': `Bearer ${token}` },
                 body: JSON.stringify({ answers: answersPayload })

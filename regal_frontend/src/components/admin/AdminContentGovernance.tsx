@@ -8,6 +8,7 @@ import AdminInvestorBuilder from './AdminInvestorBuilder';
 import AdminAssetsBuilder from './AdminAssetsBuilder';
 
 type ContentTab = 'cepa' | 'cookies' | 'privacy-policy' | 'investor-profile' | 'assets' | 'liabilities';
+const apiUrl = process.env.REACT_APP_API_URL;
 
 const TextEditor: React.FC<{ pageSlug: string }> = ({ pageSlug }) => {
     const { token } = useAuth();
@@ -20,7 +21,7 @@ const TextEditor: React.FC<{ pageSlug: string }> = ({ pageSlug }) => {
         if (!token || !pageSlug) return;
         setIsLoading(true);
         try {
-            const response = await fetch(`http://localhost:5000/api/admin/content/${pageSlug}`, {
+            const response = await fetch(`${apiUrl}/api/admin/content/${pageSlug}`, {
                 headers: { 'Authorization': `Bearer ${token}` }
             });
             if (!response.ok) throw new Error("Failed to fetch content.");
@@ -42,7 +43,7 @@ const TextEditor: React.FC<{ pageSlug: string }> = ({ pageSlug }) => {
         setIsSaving(true);
         setMessage('');
         try {
-            const response = await fetch(`http://localhost:5000/api/admin/content/${pageSlug}`, {
+            const response = await fetch(`${apiUrl}/api/admin/content/${pageSlug}`, {
                 method: 'PUT',
                 headers: { 'Content-Type': 'application/json', 'Authorization': `Bearer ${token}` },
                 body: JSON.stringify({ content_html: content })

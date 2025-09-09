@@ -3,6 +3,9 @@ import { useAuth } from '../../auth/AuthContext';
 import './FactFinder.css';
 import { useNavigate } from 'react-router-dom';
 
+
+const apiUrl = process.env.REACT_APP_API_URL;
+
 interface FamilyMember {
     relationship: 'Child' | 'Grandchild';
     full_name: string;
@@ -38,7 +41,7 @@ const FactFinderFamilyInfo: React.FC = () => {
             if (!token) return;
             setIsFetching(true);
             try {
-                const response = await fetch('http://localhost:5000/api/client/profile/family', {
+                const response = await fetch(`${apiUrl}/api/client/profile/family`, {
                     headers: { 'Authorization': `Bearer ${token}` }
                 });
                 
@@ -139,7 +142,7 @@ const FactFinderFamilyInfo: React.FC = () => {
         setIsLoading(true);
         setMessage('');
         try {
-            const response = await fetch('http://localhost:5000/api/client/profile/family', {
+            const response = await fetch(`${apiUrl}/api/client/profile/family`, {
                 method: 'POST',
                 headers: { 'Content-Type': 'application/json', 'Authorization': `Bearer ${token}` },
                 body: JSON.stringify({ family_members: familyMembers })
