@@ -1,6 +1,8 @@
-    Flask
-    flask_cors
-    mysql-connector-python
-    pyjwt
-    werkzeug
-    python-dotenv
+Flask
+Flask-Cors
+Flask-Mail
+mysql-connector-python
+PyJWT
+pytz
+Werkzeug
+python-dotenv

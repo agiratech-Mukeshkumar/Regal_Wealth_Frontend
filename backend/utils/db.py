@@ -3,7 +3,7 @@ from mysql.connector import pooling
 from config import Config
 
 try:
-    # Create a connection pool
+    
     db_pool = pooling.MySQLConnectionPool(
         pool_name="regal_pool",
         pool_size=32,

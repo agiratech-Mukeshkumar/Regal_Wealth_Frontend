@@ -4,7 +4,7 @@ import datetime
 import random
 from flask import Blueprint, request, jsonify
 from utils.db import get_db_connection
-from utils.email_sender import send_2fa_code_email # Import the email utility
+from utils.email_sender import send_2fa_code_email 
 from config import Config
 
 auth_bp = Blueprint('auth_bp', __name__)
@@ -30,15 +30,14 @@ def login():
         if not user.get('is_active', True):
             return jsonify({"message": "Account is deactivated"}), 403
 
-        # --- THIS IS THE FIX ---
-        # Always build the complete user object to send to the frontend
+      
         user_payload_for_frontend = {
             "id": user['id'],
             "email": user['email'],
             "role": user['role'],
             "first_name": user['first_name'],
             "last_name": user['last_name'],
-            "is_2fa_enabled": bool(user.get('is_2fa_enabled', False)), # Safely get the value
+            "is_2fa_enabled": bool(user.get('is_2fa_enabled', False)), 
             "mobile_number":user['mobile_number']
         }
 
@@ -109,8 +108,7 @@ def verify_2fa():
         if not db_code_record or db_code_record['code'] != code:
             return jsonify({"message": "Invalid verification code"}), 401
 
-        # --- THIS IS THE FIX ---
-        # Fetch all necessary fields to build the complete user object
+       
         cursor.execute("SELECT id, email, role, first_name, last_name, is_2fa_enabled , mobile_number FROM users WHERE id = %s", (user_id,))
         user = cursor.fetchone()
 
@@ -141,7 +139,7 @@ def verify_2fa():
 
 
 
-# Add this new route to your auth/routes.py file
+
 
 @auth_bp.route('/resend-2fa', methods=['POST'])
 def resend_2fa():
@@ -156,7 +154,7 @@ def resend_2fa():
         return jsonify({"message": "Temporary token is required"}), 400
 
     try:
-        # 1. Decode the temporary token to identify the user
+        
         payload = jwt.decode(temp_token, Config.JWT_SECRET_KEY, algorithms=["HS256"])
         if payload.get('type') != '2fa_pending':
             return jsonify({"message": "Invalid token type"}), 401
@@ -170,28 +168,24 @@ def resend_2fa():
     try:
         conn.start_transaction()
         
-        # 2. Invalidate all old codes for this user
         cursor.execute("DELETE FROM two_factor_codes WHERE user_id = %s", (user_id,))
         
-        # 3. Generate a new 6-digit code
         new_code = str(random.randint(100000, 999999))
         
-        # 4. Store the new code in the database with a fresh 10-minute expiration
+       
         expires_at = datetime.datetime.utcnow() + datetime.timedelta(minutes=10)
         cursor.execute(
             "INSERT INTO two_factor_codes (user_id, code, expires_at) VALUES (%s, %s, %s)",
             (user_id, new_code, expires_at)
         )
 
-        # 5. Fetch the user's email
         cursor.execute("SELECT email FROM users WHERE id = %s", (user_id,))
         user = cursor.fetchone()
 
         if not user:
             conn.rollback()
             return jsonify({"message": "User not found"}), 404
-        
-        # 6. Send the new code via email
+      
         send_2fa_code_email(user['email'], new_code)
         
         conn.commit()

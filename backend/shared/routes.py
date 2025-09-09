@@ -13,14 +13,14 @@ def get_notifications(current_user):
     conn = get_db_connection()
     cursor = conn.cursor(dictionary=True)
     try:
-        # Fetch unread notifications
+        
         cursor.execute(
             "SELECT id, message, link_url, created_at FROM notifications WHERE recipient_user_id = %s AND is_read = FALSE ORDER BY created_at DESC",
             (user_id,)
         )
         unread_notifications = cursor.fetchall()
 
-        # Fetch read notifications (e.g., the 10 most recent)
+        
         cursor.execute(
             "SELECT id, message, link_url, created_at FROM notifications WHERE recipient_user_id = %s AND is_read = TRUE ORDER BY created_at DESC LIMIT 10",
             (user_id,)
@@ -46,7 +46,7 @@ def mark_notification_as_read(current_user, notification_id):
     conn = get_db_connection()
     cursor = conn.cursor()
     try:
-        # Ensure the user can only mark their own notifications as read
+        
         cursor.execute(
             "UPDATE notifications SET is_read = TRUE WHERE id = %s AND recipient_user_id = %s",
             (notification_id, user_id)

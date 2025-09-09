@@ -7,7 +7,7 @@ def send_2fa_code_email(user_email, code):
     Sends the 2FA verification code to the user's email.
     """
     try:
-        # Get the mail instance from the current app context
+        
         mail = current_app.extensions.get('mail')
         
         msg = Message(
@@ -19,19 +19,18 @@ def send_2fa_code_email(user_email, code):
         mail.send(msg)
         return True
     except Exception as e:
-        # Log the error in a real application
+
         print(f"Error sending email: {e}")
         return False
 
 
-# Add this new function to your email_sender.py file
 
 def send_welcome_email_with_password(user_email, plain_password):
     """
     Sends a welcome email to a new client with their temporary password.
     """
     try:
-        # Get the mail instance from the current app context
+    
         mail = current_app.extensions.get('mail')
         
         msg = Message(
@@ -71,20 +70,17 @@ def send_appointment_email(client_email, client_name, advisor_name, appointment_
             recipients=[client_email]
         )
 
-        # --- THIS IS THE FIX ---
-        
-        # 1. Get the timezone-aware UTC start and end times
+     
         start_time_utc = appointment_details['start_time']
         end_time_utc = appointment_details['end_time']
 
-        # 2. Define the target timezone (India Standard Time)
+  
         ist_tz = pytz.timezone('Asia/Kolkata')
 
-        # 3. Convert both UTC times to the target timezone
         start_time_ist = start_time_utc.astimezone(ist_tz)
         end_time_ist = end_time_utc.astimezone(ist_tz)
 
-        # 4. Format the newly converted local times for display
+
         formatted_start = start_time_ist.strftime('%I:%M %p')
         formatted_end = end_time_ist.strftime('%I:%M %p')
         formatted_date = start_time_ist.strftime('%A, %B %d, %Y')

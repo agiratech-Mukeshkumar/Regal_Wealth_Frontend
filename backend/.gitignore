@@ -1,0 +1,14 @@
+# Python
+venv/
+__pycache__/
+*.pyc
+
+# Environment secrets
+.env
+
+# User-uploaded files (we'll handle this differently)
+uploads/
+
+# IDE files (optional but good practice)
+.idea/
+.vscode/

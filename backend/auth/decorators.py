@@ -9,7 +9,7 @@ def token_required(f):
     def decorated(*args, **kwargs):
         token = None
         if 'Authorization' in request.headers:
-            # Expected format: "Bearer <token>"
+          
             token = request.headers['Authorization'].split(" ")[1]
 
         if not token:
@@ -17,7 +17,7 @@ def token_required(f):
 
         try:
             data = jwt.decode(token, Config.JWT_SECRET_KEY, algorithms=["HS256"])
-            # Pass the decoded data to the route
+            
             kwargs['current_user'] = data 
         except jwt.ExpiredSignatureError:
             return jsonify({'message': 'Token has expired!'}), 401
@@ -46,7 +46,7 @@ def document_token_required(f):
             return jsonify({'message': 'Token is missing!'}), 401
 
         try:
-            # Using current_app.config to safely access the running app's configuration
+           
             data = jwt.decode(token, current_app.config['JWT_SECRET_KEY'], algorithms=["HS256"])
             kwargs['current_user'] = data
         except jwt.ExpiredSignatureError:
@@ -60,14 +60,14 @@ def document_token_required(f):
 def admin_required(f):
     """A decorator to ensure the user is an admin."""
     @wraps(f)
-    @token_required # This decorator runs first
+    @token_required
     def decorated(*args, **kwargs):
-        # The user data is passed from token_required
+        
         current_user = kwargs.get('current_user') 
         if current_user and current_user['role'] != 'admin':
             return jsonify({'message': 'Admin access required!'}), 403
         
-        # We can remove current_user from kwargs if the route doesn't need it
+        
         kwargs.pop('current_user', None)
         return f(*args, **kwargs)
     return decorated
@@ -81,27 +81,25 @@ def advisor_document_required(f):
         return f(current_user, *args, **kwargs)
     return decorated
 
-# Add this function to your auth/decorators.py file
+
 
 def advisor_required(f):
     """A decorator to ensure the user is an advisor."""
     @wraps(f)
-    @token_required # Runs after token_required
+    @token_required
     def decorated(*args, **kwargs):
         current_user = kwargs.get('current_user')
         if current_user and current_user['role'] != 'advisor':
             return jsonify({'message': 'Advisor access required!'}), 403
         
-        # Pass the current_user data to the route
         return f(*args, **kwargs)
     return decorated
 
-# Add this function to your auth/decorators.py file
 
 def client_required(f):
     """A decorator to ensure the user is a client."""
     @wraps(f)
-    @token_required # Runs after token_required
+    @token_required 
     def decorated(*args, **kwargs):
         current_user = kwargs.get('current_user')
         if current_user and current_user['role'] != 'client':
